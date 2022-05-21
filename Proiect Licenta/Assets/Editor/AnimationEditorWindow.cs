@@ -7,10 +7,15 @@ using Utilities;
 
 class AnimationEditorWindow : EditorWindow
 {
+    //TODO Try upgrade to Unity Version 2021.3 
+
     private string newAnimationButton = "Create New Animation";
     private string prevStepButton = "Prev Step";
     private string nextStepButton = "Next Step";
     private string addStepButton = "Add Step";
+    private string exportAnimation = "Export Animation";
+    private string previewAnimation = "Preview Animation";
+    private string stopPreview = "Stop Preview";
 
     private int currentStep;
     private int stepsCount;
@@ -19,6 +24,7 @@ class AnimationEditorWindow : EditorWindow
     private Animation animation;
     private GameObject animationModel;
 
+    private GameObject previewModel;
     private GameObject currentModel;
     private GameObject pastModel;
 
@@ -28,6 +34,8 @@ class AnimationEditorWindow : EditorWindow
     private bool editModeEnabled;
     private Vector2 scrollPos;
     private AnimationStep defaultPose;
+    private int tab;
+    private bool wasInPlayMode;
 
     [MenuItem("Window/Animation Editor")]
     public static void ShowWindow()
@@ -38,57 +46,136 @@ class AnimationEditorWindow : EditorWindow
     public void Awake()
     {
         animationEditor = new AnimationEditor();
+        editModeEnabled = true;
+        wasInPlayMode = false;
+    }
+
+    private void LogPlayModeState(PlayModeStateChange state)
+    {
+        if (state == PlayModeStateChange.EnteredEditMode)
+        {
+            editModeEnabled = true;
+            if (animationModel != null)
+            {
+                SetActiveObjects();
+            }
+        }
     }
 
     private void OnEnable()
     {
-        animationEditor = new AnimationEditor();
-        currentStep = 0;
-        stepsCount = 0;
-        animation = null;
-        Repaint();
+        EditorApplication.playModeStateChanged += LogPlayModeState;
+        if (wasInPlayMode)
+        {
+            wasInPlayMode = false;
+            Debug.Log("On Enable");
+        }
+    }
+
+    private void OnDisable()
+    {
+        Debug.Log("On Disable");
     }
 
     void OnGUI()
     {
+        tab = GUILayout.Toolbar(tab, new string[] {"Edit Animations", "Imitation "});
+        switch (tab)
+        {
+            case 0:
+                ShowAnimationsTab();
+                break;
+            case 1:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void ShowAnimationsTab()
+    {
         EditorGUILayout.Space();
         ShowModelSelector();
         ShowDefaultPoseSelector();
-        
-        bool editMode;
-        editMode = EditorGUILayout.BeginToggleGroup("Enable Editing", editModeEnabled);
-        if (editModeEnabled != editMode)
-        {
-            editModeEnabled = editMode;
 
-            SetActiveObjects();
+        EditorGUILayout.Space();
+        ShowAnimationSelector();
+
+        EditorGUI.BeginDisabledGroup(animationModel == null);
+        EditorGUILayout.BeginHorizontal();
+        EditorGUI.BeginDisabledGroup(!editModeEnabled);
+        if (GUILayout.Button(previewAnimation))
+        {
+            PreviewAnimation();
         }
-        
+
+        EditorGUI.EndDisabledGroup();
+        EditorGUI.BeginDisabledGroup(editModeEnabled);
+        if (GUILayout.Button(stopPreview))
+        {
+            StopPreview();
+        }
+
+        EditorGUI.EndDisabledGroup();
+        EditorGUILayout.EndHorizontal();
+        EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button(newAnimationButton))
         {
             animationEditor.CreateNewAnimation();
         }
 
-        ShowAnimationSelector();
-
-        if (animation != null)
+        if (GUILayout.Button(exportAnimation))
         {
-            ShowAnimationDetails();
+            Debug.Log(exportAnimation);
+            ExportAnimation();
         }
 
-        EditorGUILayout.EndToggleGroup();
+        EditorGUILayout.EndHorizontal();
+
+        if (animation != null && editModeEnabled)
+        {
+            ShowAnimationDetails();
+            EditorGUILayout.Space();
+        }
+    }
+
+    private void PreviewAnimation()
+    {
+        EditorApplication.EnterPlaymode();
+        editModeEnabled = false;
+        SetActiveObjects();
+    }
+
+    private void StopPreview()
+    {
+        EditorApplication.ExitPlaymode();
+    }
+
+    private void ExportAnimation()
+    {
+        string savePath = EditorUtility.SaveFilePanel(
+            "Export animation as JSON",
+            "",
+            "animation" + ".json",
+            "json");
+
+        if (savePath.Length != 0)
+        {
+            Debug.Log(savePath);
+        }
     }
 
     private void ShowDefaultPoseSelector()
     {
-        defaultPose = (AnimationStep) EditorGUILayout.ObjectField("Default Pose:", defaultPose, typeof(AnimationStep), false);
+        defaultPose =
+            (AnimationStep) EditorGUILayout.ObjectField("Default Pose:", defaultPose, typeof(AnimationStep), false);
     }
 
     private void SetActiveObjects()
     {
-        GameObject model = GameObjectUtilities.FindChildWithName(animationModel, "Model");
-
-        model.SetActive(!editModeEnabled);
+        previewModel.SetActive(!editModeEnabled);
         currentModel.SetActive(editModeEnabled);
         pastModel.SetActive(editModeEnabled);
     }
@@ -108,6 +195,7 @@ class AnimationEditorWindow : EditorWindow
             Debug.Log(prevStepButton);
             StepBackwards();
         }
+
         EditorGUI.EndDisabledGroup();
 
         if (GUILayout.Button(addStepButton))
@@ -130,11 +218,11 @@ class AnimationEditorWindow : EditorWindow
         EditorGUILayout.LabelField(String.Format("Animation Steps:{0}", stepsCount));
         EditorGUILayout.EndHorizontal();
         currentStep = EditorGUILayout.IntField("Current Step:", currentStep, GUILayout.ExpandWidth(true));
-        
+
         // Show current step inspector
 
         Editor e = Editor.CreateEditor(animation.animationSteps[currentStep]);
-        
+
         e.DrawDefaultInspector();
         EditorGUILayout.EndScrollView();
     }
@@ -178,10 +266,13 @@ class AnimationEditorWindow : EditorWindow
         if (animationModel != model)
         {
             animationModel = model;
-            
+
+            previewModel = GameObjectUtilities.FindChildWithName(animationModel, "Model");
             currentModel = GameObjectUtilities.FindChildWithName(animationModel, "CurrentStep");
             pastModel = GameObjectUtilities.FindChildWithName(animationModel, "PreviousStep");
-            
+
+            SetActiveObjects();
+
             SetBodyParts(_currentModelBodyParts, currentModel);
             SetBodyParts(_pastModelBodyParts, pastModel);
         }
@@ -196,6 +287,7 @@ class AnimationEditorWindow : EditorWindow
             SetPastModelPose(defaultPose);
             SetCurrentModelPose(defaultPose);
         }
+
         if (animation != a)
         {
             animation = a;
@@ -234,19 +326,19 @@ class AnimationEditorWindow : EditorWindow
     {
         SetBodyPartRotation(model["body_lower"], animationStep.lowerBodyRotation);
         SetBodyPartRotation(model["body_upper"], animationStep.upperBodyRotation);
-        
+
         SetBodyPartRotation(model["left_leg_lower"], animationStep.lowerLeftLegRotation);
         SetBodyPartRotation(model["left_leg_upper"], animationStep.upperLeftLegRotation);
-        
+
         SetBodyPartRotation(model["right_leg_lower"], animationStep.lowerRightLegRotation);
         SetBodyPartRotation(model["right_leg_upper"], animationStep.upperRightLegRotation);
-        
+
         SetBodyPartRotation(model["left_arm_lower"], animationStep.lowerLeftArmRotation);
         SetBodyPartRotation(model["left_arm_upper"], animationStep.upperLeftArmRotation);
-        
+
         SetBodyPartRotation(model["right_arm_lower"], animationStep.lowerRightArmRotation);
         SetBodyPartRotation(model["right_arm_upper"], animationStep.upperRightArmRotation);
-        
+
         SetBodyPartRotation(model["head"], animationStep.headRotation);
     }
 

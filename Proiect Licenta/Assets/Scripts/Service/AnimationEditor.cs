@@ -32,9 +32,9 @@ public class AnimationEditor
         
     }
 
-    public void ExportAnimation()
+    public string ExportAnimation()
     {
-        
+        return "";
     }
 
     public void SetAnimation(Animation animation)

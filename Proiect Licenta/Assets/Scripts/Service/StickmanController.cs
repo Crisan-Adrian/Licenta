@@ -55,15 +55,6 @@ public class StickmanController : MonoBehaviour
         UpdateWalkStepComponents();
         _frames = 0;
         _reachedEnd = false;
-        
-        ExportAnimation();
-    }
-
-    private void ExportAnimation()
-    {
-        string json = JsonUtility.ToJson(animation.animationSteps[0]);
-        File.WriteAllText("D:\\Animation.json", json);
-        Debug.Log("Done saving animation");
     }
 
     public void AddDelegate(OnFinishDelegate finishDelegate)
