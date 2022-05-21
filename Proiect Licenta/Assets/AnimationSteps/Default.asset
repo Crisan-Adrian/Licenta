@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb45422b7e4db045bdadaac017ff289, type: 3}
+  m_Name: Default
+  m_EditorClassIdentifier: 
+  framesPerStep: 30
+  lowerBodyRotation: {x: 0, y: 0, z: 0}
+  upperLeftLegRotation: {x: 0, y: 0, z: 0}
+  lowerLeftLegRotation: {x: 0, y: 0, z: 0}
+  upperRightLegRotation: {x: 0, y: 0, z: 0}
+  lowerRightLegRotation: {x: 0, y: 0, z: 0}
+  upperBodyRotation: {x: 0, y: 0, z: 0}
+  upperLeftArmRotation: {x: 0, y: 0, z: 0}
+  lowerLeftArmRotation: {x: 0, y: 0, z: 0}
+  upperRightArmRotation: {x: 0, y: 0, z: 0}
+  lowerRightArmRotation: {x: 0, y: 0, z: 0}
+  headRotation: {x: 0, y: 0, z: 0}
