@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.EditorCoroutines.Editor;
 using Utilities;
 
 public class AnimationEditorWindow : EditorWindow
@@ -37,6 +38,7 @@ public class AnimationEditorWindow : EditorWindow
     private Vector2 scrollPos;
     private AnimationStep defaultPose;
     private int tab;
+    private EditorCoroutine coroutine;
 
     [MenuItem("Window/Animation Editor")]
     public static void ShowWindow()
@@ -142,15 +144,19 @@ public class AnimationEditorWindow : EditorWindow
     {
         editModeEnabled = false;
         StickmanEditorController stickmanEditorController = new StickmanEditorController();
+        stickmanEditorController.FrameModifier = 2;
+        stickmanEditorController.FrameRate = 60;
         stickmanEditorController.Setup(animation, previewModel);
         SetActiveObjects();
-        stickmanEditorController.StartPreview();
+        coroutine = this.StartCoroutine(
+            stickmanEditorController.StartPreview());
     }
 
     private void StopPreview()
     {
         editModeEnabled = true;
         SetActiveObjects();
+        this.StopCoroutine(coroutine);
     }
 
     private void ExportAnimation()

@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Unity.EditorCoroutines.Editor;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Utilities;
+using UnityEditor;
 
 public class StickmanEditorController
 {
@@ -410,15 +412,17 @@ public class StickmanEditorController
         }
     }
 
-    public void StartPreview()
+    public IEnumerator StartPreview()
     {
         done = false;
         float delay = 1 / FrameModifier;
+        var waitForOneSecond = new EditorWaitForSeconds(delay / 10);
+        Debug.Log("Step");
 
         while (Loop || !done)
         {
             Update();
-            WaitForChangedResult(delay);
+            yield return waitForOneSecond;
         }
     }
 }
