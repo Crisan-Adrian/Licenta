@@ -40,20 +40,18 @@ public class AnimationEditor
     public void SetAnimation(Animation animation)
     {
         _animation = animation;
-        Debug.Log(_animation.animationSteps.Count);
+        animationName = animation.name;
+        Debug.Log(animationName);
     }
 
     public void AddNewAnimationStep()
     {
-        AnimationStep previousStep = _animation.animationSteps[_animation.animationSteps.Count - 1];
-        
         AnimationStep newStep = ScriptableObject.CreateInstance<AnimationStep>();
-        string assetName = String.Format("{0}_{1}.asset", animationName, _animation.animationSteps.Count);
+        string assetName = String.Format("{0}_Step_{1}.asset", animationName, _animation.animationSteps.Count);
+        _animation.animationSteps.Add(newStep);
+        
         AssetDatabase.CreateAsset(newStep, assetsPath+assetName);
         AssetDatabase.SaveAssets();
-        //TODO Export Animation as JSON too
-        
-        _animation.animationSteps.Add(newStep);
     }
 
     public Animation GetCurrentAnimation()

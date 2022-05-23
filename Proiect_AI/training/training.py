@@ -1,21 +1,21 @@
 import datetime
 import numpy as np
 import pandas as pd
-from keras.optimizer_v2.adam import Adam
+from keras.optimizers import Adam
 from matplotlib import pyplot as plt
 from rl.agents import DQNAgent
 from rl.memory import SequentialMemory
-from rl.policy import BoltzmannQPolicy, GreedyQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy
+from rl.policy import GreedyQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy
 
 from models import create_primitive_model
 from environments import PrimitiveEnvironment
 
 EPISODE_LENGTH = 500
 REPEAT = 2
-EPISODES = 1001
-ANNEAL_PERIOD = 40
-MEMORY = 5000
-BATCH = 500
+EPISODES = 450
+ANNEAL_PERIOD = 50
+MEMORY = 10000
+BATCH = 1000
 
 
 def build_agent(model_p, actions_p):
@@ -74,7 +74,7 @@ trainEnv = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH, rep
 dqn = build_agent(model, actions)
 dqn.compile(Adam(learning_rate=10e-7))
 scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=2)
-dqn.save_weights('../trained_models/model_0006_', overwrite=True)
+dqn.save_weights('../trained_models/model_0007', overwrite=True)
 
 print(scores.history['episode_reward'])
 
@@ -91,30 +91,30 @@ plt.show()
 # print(np.mean(scores.history['episode_reward']))
 #
 # print(trained_model.layers[1].get_weights())
-for i in range(len(test)):
-    test_predict_arr = test[i].tolist()
-    print(test_predict_arr)
-    results = []
-    for j in range(n):
-        test_predict = np.array([test_predict_arr[j], test_predict_arr[n + j]])
-        # test_predict1 = np.expand_dims(test_predict1, axis=0)
-        # test_predict1 = np.expand_dims(test_predict1, axis=0)
-
-        # predict_1 = np.array(test_predict.tolist() + [0.0, 1.0])
-        # predict_1 = np.expand_dims(predict_1, axis=0)
-        # predict_1 = np.expand_dims(predict_1, axis=0)
-
-        # print(test_predict1)
-        # print(predict_1.shape)
-        # print(test_predict2)
-        # print(predict_2.shape)
-
-        # trained_model.summary()
-
-        result = dqn.forward(test_predict)
-
-        # print(result_1, np.argmax(result_1))
-        # print(result_2, np.argmax(result_2))
-        results.append(primitiveDict[str(result)])
-    print(results)
-    print()
+# for i in range(len(test)):
+#     test_predict_arr = test[i].tolist()
+#     print(test_predict_arr)
+#     results = []
+#     for j in range(n):
+#         test_predict = np.array([test_predict_arr[j], test_predict_arr[n + j]])
+#         # test_predict1 = np.expand_dims(test_predict1, axis=0)
+#         # test_predict1 = np.expand_dims(test_predict1, axis=0)
+#
+#         # predict_1 = np.array(test_predict.tolist() + [0.0, 1.0])
+#         # predict_1 = np.expand_dims(predict_1, axis=0)
+#         # predict_1 = np.expand_dims(predict_1, axis=0)
+#
+#         # print(test_predict1)
+#         # print(predict_1.shape)
+#         # print(test_predict2)
+#         # print(predict_2.shape)
+#
+#         # trained_model.summary()
+#
+#         result = dqn.forward(test_predict)
+#
+#         # print(result_1, np.argmax(result_1))
+#         # print(result_2, np.argmax(result_2))
+#         results.append(primitiveDict[str(result)])
+#     print(results)
+#     print()

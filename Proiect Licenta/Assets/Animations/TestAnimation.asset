@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationSteps:
   - {fileID: 11400000, guid: 4aa59ea22a06d6b4c95f30b1b963d84d, type: 2}
+  - {fileID: 11400000, guid: 34c19eae582f89e428b49d961fb122e2, type: 2}
+  - {fileID: 11400000, guid: b14625146a824fc43952aa941c35e5f2, type: 2}
+  - {fileID: 11400000, guid: 4e6a9ca4be214164bb53f0ef8febabec, type: 2}

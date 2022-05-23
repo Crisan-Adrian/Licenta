@@ -6,58 +6,50 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Utilities;
 
-public class StickmanController : MonoBehaviour
+public class StickmanEditorController
 {
-    //TODO clean-up code
-    
-    [SerializeField] private bool loop = true;
-    [SerializeField] private AnimationStep initialPose;
-    [SerializeField] private Animation animation;
-    [SerializeField] private float frameModifier = 1f;
-    [SerializeField] private float epsilon = .5f;
-    [SerializeField] private float overshootEpsilon = .0001f;
+    public bool Loop { get; set; }
+    private AnimationStep initialPose;
+    private Animation animation;
+    public float FrameModifier { get; set; }
+    public float OvershootEpsilon { get; set; }
+    public int FrameRate { get; set; }
     private int _index;
-    private int _frames;
-    private bool _reachedEnd;
 
-    public delegate void OnFinishDelegate();
+    private GameObject gameObject;
 
-    private OnFinishDelegate _onFinishDelegate;
+    private Dictionary<string, GameObject> _bodyParts;
+    private Dictionary<string, Vector3> _animationStepComponents;
+    private Dictionary<string, Vector3> _rotationsPerFrame;
+    private List<string> keys;
+    private Dictionary<string, Vector3> _bodyEulerAngles;
+    private bool done;
 
-    private Dictionary<string, GameObject> _bodyParts = new Dictionary<string, GameObject>();
-    private Dictionary<string, Vector3> _animationStepComponents = new Dictionary<string, Vector3>();
-    private Dictionary<string, Vector3> _rotationsPerFrame = new Dictionary<string, Vector3>();
-    private List<string> keys = new List<string>();
-    private Dictionary<string, Vector3> _bodyEulerAngles = new Dictionary<string, Vector3>();
-    private bool wasBodyPartsSet = false;
-    private bool wasKeysSet = false;
-
-    
-    
-    // Start is called before the first frame update
-    void Awake()
+    public StickmanEditorController()
     {
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
-        
-        Setup();
-        
-        _frames = 0;
-        _reachedEnd = false;
+        Loop = false;
+        FrameModifier = 1;
+        FrameRate = 30;
+        _bodyParts = new Dictionary<string, GameObject>();
+        _animationStepComponents = new Dictionary<string, Vector3>();
+        _rotationsPerFrame = new Dictionary<string, Vector3>();
+        _bodyEulerAngles = new Dictionary<string, Vector3>();
+        keys = new List<string>();
     }
-    
-    private void Setup()
+
+    public void Setup(Animation animation, GameObject model)
     {
         _index = -1;
-        
+        gameObject = model;
+
         SetKeys();
 
         SetBodyParts();
-        
-        SetAnimation();
+
+        SetAnimation(animation);
 
         SetInitialRotations();
-        
+
         UpdateWalkStepComponents();
     }
 
@@ -74,46 +66,32 @@ public class StickmanController : MonoBehaviour
         keys.Add("right_arm_upper");
         keys.Add("right_arm_lower");
         keys.Add("head");
-        wasKeysSet = true;
         Debug.Log("SetKeys");
-    }
-
-    public void AddDelegate(OnFinishDelegate finishDelegate)
-    {
-        _onFinishDelegate += finishDelegate;
-    }
-    
-    public void RemoveDelegate(OnFinishDelegate finishDelegate)
-    {
-        _onFinishDelegate -= finishDelegate;
     }
 
     private void SetBodyParts()
     {
-        _bodyParts["body_lower"] = GameObjectUtilities.FindChildWithName(gameObject,"Body_Lower");
-        _bodyParts["body_upper"] = GameObjectUtilities.FindChildWithName(gameObject,"Body_Upper");
-        _bodyParts["left_leg_lower"] = GameObjectUtilities.FindChildWithName(gameObject,"Left_Leg_Lower");
-        _bodyParts["left_leg_upper"] = GameObjectUtilities.FindChildWithName(gameObject,"Left_Leg_Upper");
-        _bodyParts["right_leg_lower"] = GameObjectUtilities.FindChildWithName(gameObject,"Right_Leg_Lower");
-        _bodyParts["right_leg_upper"] = GameObjectUtilities.FindChildWithName(gameObject,"Right_Leg_Upper");
-        _bodyParts["left_arm_lower"] = GameObjectUtilities.FindChildWithName(gameObject,"Left_Arm_Lower");
-        _bodyParts["left_arm_upper"] = GameObjectUtilities.FindChildWithName(gameObject,"Left_Arm_Upper");
-        _bodyParts["right_arm_lower"] = GameObjectUtilities.FindChildWithName(gameObject,"Right_Arm_Lower");
-        _bodyParts["right_arm_upper"] = GameObjectUtilities.FindChildWithName(gameObject,"Right_Arm_Upper");
-        _bodyParts["head"] = GameObjectUtilities.FindChildWithName(gameObject,"Head");
-        wasBodyPartsSet = true;
+        _bodyParts["body_lower"] = GameObjectUtilities.FindChildWithName(gameObject, "Body_Lower");
+        _bodyParts["body_upper"] = GameObjectUtilities.FindChildWithName(gameObject, "Body_Upper");
+        _bodyParts["left_leg_lower"] = GameObjectUtilities.FindChildWithName(gameObject, "Left_Leg_Lower");
+        _bodyParts["left_leg_upper"] = GameObjectUtilities.FindChildWithName(gameObject, "Left_Leg_Upper");
+        _bodyParts["right_leg_lower"] = GameObjectUtilities.FindChildWithName(gameObject, "Right_Leg_Lower");
+        _bodyParts["right_leg_upper"] = GameObjectUtilities.FindChildWithName(gameObject, "Right_Leg_Upper");
+        _bodyParts["left_arm_lower"] = GameObjectUtilities.FindChildWithName(gameObject, "Left_Arm_Lower");
+        _bodyParts["left_arm_upper"] = GameObjectUtilities.FindChildWithName(gameObject, "Left_Arm_Upper");
+        _bodyParts["right_arm_lower"] = GameObjectUtilities.FindChildWithName(gameObject, "Right_Arm_Lower");
+        _bodyParts["right_arm_upper"] = GameObjectUtilities.FindChildWithName(gameObject, "Right_Arm_Upper");
+        _bodyParts["head"] = GameObjectUtilities.FindChildWithName(gameObject, "Head");
         Debug.Log("SetBodyParts");
     }
 
-    void FixedUpdate()
+    private void Update()
     {
-        // {Debug.Log(String.Format("Current index {0}", _index));}
         if (AnimationStepCompleted())
         {
             UpdateWalkStepComponents();
         }
 
-        _frames++;
         DoWalkStep();
     }
 
@@ -145,7 +123,7 @@ public class StickmanController : MonoBehaviour
         Vector3 adjustedTargetRotation = AdjustRotationVector(targetRotation);
         eulerAngles = AdjustRotationVector(eulerAngles);
 
-        if (ApproximatelyEqual(eulerAngles, adjustedTargetRotation, overshootEpsilon))
+        if (ApproximatelyEqual(eulerAngles, adjustedTargetRotation, OvershootEpsilon))
         {
             eulerAngles = adjustedTargetRotation;
             rotation.eulerAngles = eulerAngles;
@@ -301,11 +279,11 @@ public class StickmanController : MonoBehaviour
 
     private float ResolveDoublePoint(float targetRotation, float currentRotation)
     {
-        if (currentRotation > 180 && Mathf.Abs(targetRotation) < epsilon)
+        if (currentRotation > 180 && Mathf.Abs(targetRotation) < OvershootEpsilon)
         {
             targetRotation += 360;
         }
-        else if (currentRotation <= 180 && Mathf.Abs(targetRotation - 360) < epsilon)
+        else if (currentRotation <= 180 && Mathf.Abs(targetRotation - 360) < OvershootEpsilon)
         {
             targetRotation -= 360;
         }
@@ -361,22 +339,17 @@ public class StickmanController : MonoBehaviour
         _index++;
         if (_index == animation.animationSteps.Count)
         {
-            if (loop == true)
+            if (Loop == true)
             {
-                if (!_reachedEnd && _onFinishDelegate != null)
-                {
-                    _reachedEnd = true;
-                    _onFinishDelegate();
-                }
                 _index = 0;
             }
             else
             {
                 _index--;
+                done = true;
             }
-            _frames = 0;
         }
-        
+
         AnimationStep animationStep = animation.animationSteps[_index];
 
         _animationStepComponents["body_lower"] = animationStep.lowerBodyRotation;
@@ -390,15 +363,13 @@ public class StickmanController : MonoBehaviour
         _animationStepComponents["right_arm_lower"] = animationStep.lowerRightArmRotation;
         _animationStepComponents["right_arm_upper"] = animationStep.upperRightArmRotation;
         _animationStepComponents["head"] = animationStep.headRotation;
-
-
+        
         foreach (string key in keys)
         {
             Vector3 adjustedRotationVector = AdjustRotationVector(_animationStepComponents[key]);
             Vector3 adjustedEulerAngles = AdjustRotationVector(_bodyEulerAngles[_bodyParts[key].name]);
             Vector3 rotationVector = GetRotationStepTarget(adjustedRotationVector, adjustedEulerAngles);
-            rotationVector /= animationStep.framesPerStep * (1 / frameModifier);
-            // Debug.Log("Rotation " + rotationVector);
+            rotationVector /= animationStep.framesPerStep * (1 / FrameModifier);
             _rotationsPerFrame[key] = rotationVector;
         }
     }
@@ -412,10 +383,10 @@ public class StickmanController : MonoBehaviour
             string name = _bodyParts[key].name;
 
             Vector3 bodyEulerAngle = _bodyEulerAngles[name];
-            
+
             if (!ApproximatelyEqual(AdjustRotationVector(bodyEulerAngle),
                 AdjustRotationVector(_animationStepComponents[key]),
-                overshootEpsilon))
+                OvershootEpsilon))
             {
                 walkStepComplete = false;
                 // Debug.Log(String.Format("Rotation vectors not equal {0}, {1})",
@@ -430,16 +401,24 @@ public class StickmanController : MonoBehaviour
         return walkStepComplete;
     }
 
-    public void SetAnimation()
+    public void SetAnimation(Animation animation)
     {
-        if (animation == null)
-        {
-            EditorProxy editorProxy = EditorProxy.GetInstance();
-            animation = editorProxy.Animation;
-        }
+        this.animation = animation;
         if (animation.animationSteps.Count > 0)
         {
             initialPose = animation.animationSteps[0];
+        }
+    }
+
+    public void StartPreview()
+    {
+        done = false;
+        float delay = 1 / FrameModifier;
+
+        while (Loop || !done)
+        {
+            Update();
+            WaitForChangedResult(delay);
         }
     }
 }

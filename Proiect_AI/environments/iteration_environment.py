@@ -50,6 +50,8 @@ class IterationEnvironment(gym.Env):
 
     def step(self, action: ActType) -> Tuple[ObsType, float, bool, dict]:
         canImprove = False
+        # TODO: MOVE TOWARDS A MORE OPTIMAL STATE
+        # TODO: CHANGE ENV TO REPLACE STATE ONCE THE OPTIMUM IS REACHED
 
         currentL = self.current[self.currentStep]
         targetL = self.target[self.currentStep]
