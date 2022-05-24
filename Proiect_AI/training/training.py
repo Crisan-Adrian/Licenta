@@ -14,7 +14,7 @@ from environments import PrimitiveEnvironment
 EPISODE_LENGTH = 500
 REPEAT = 2
 EPISODES = 500
-ANNEAL_PERIOD = 100
+ANNEAL_PERIOD = 200
 MEMORY = 10000
 BATCH = 1000
 
