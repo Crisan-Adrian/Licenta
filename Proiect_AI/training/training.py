@@ -14,13 +14,13 @@ from environments import PrimitiveEnvironment
 EPISODE_LENGTH = 500
 REPEAT = 2
 EPISODES = 500
-ANNEAL_PERIOD = 50
+ANNEAL_PERIOD = 100
 MEMORY = 10000
-BATCH = 2000
+BATCH = 1000
 
 
 def build_agent(model_p, actions_p):
-    policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1., value_min=.1, value_test=.05,
+    policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1., value_min=.05, value_test=.05,
                                   nb_steps=EPISODE_LENGTH * REPEAT * ANNEAL_PERIOD)
     test_policy = GreedyQPolicy()
     memory = SequentialMemory(limit=MEMORY, window_length=1)
@@ -72,12 +72,9 @@ model.summary()
 
 trainEnv = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH, repeat=REPEAT)
 
-lr_schedule = keras.optimizers.schedules.ExponentialDecay(
-    initial_learning_rate=1e-5,
-    decay_steps=1000,
-    decay_rate=0.8)
+
 dqn = build_agent(model, actions)
-dqn.compile(Adam(learning_rate=lr_schedule))
+dqn.compile(Adam(learning_rate=10e-7))
 scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=2)
 dqn.save_weights('../trained_models/model_0012', overwrite=True)
 
