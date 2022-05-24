@@ -1,7 +1,15 @@
 ﻿namespace Utilities
 {
-    public class AnimationSerializer
+    public static class AnimationSerializer
     {
-        
+        public static string ToJSON(Animation animation)
+        {
+            return "{}";
+        }
+
+        public static Animation FromJSON(string animationJSON)
+        {
+            return null;
+        }
     }
 }
