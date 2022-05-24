@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Unity.EditorCoroutines.Editor;
 using Utilities;
 
@@ -169,7 +170,11 @@ public class AnimationEditorWindow : EditorWindow
 
         if (savePath.Length != 0)
         {
-            Debug.Log(savePath);
+            string json = AnimationSerializer.ToJSON(animation);
+
+            File.WriteAllText(savePath, json);
+            
+            // Debug.Log(json);
         }
     }
 

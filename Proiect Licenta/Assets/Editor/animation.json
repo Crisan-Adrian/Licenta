@@ -1,0 +1,933 @@
+{
+  "animationName": "WalkAnimation",
+  "steps": [
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 5.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -7.5,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -75.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": -20.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 85.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 90.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 25.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 85.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 2.5,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -20.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 25.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -20.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": 25.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": -30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 40.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": 30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": -40.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -20.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 45.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": 40.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 75.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": -75.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -45.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 45.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": 30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": -30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 40.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -45.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": 25.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": -30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 40.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 2.5,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -45.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 5.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -5.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": 5.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 75.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": -20.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -75.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 5.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -7.5,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 90.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": -20.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 85.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 25.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": -15.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 85.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 25.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -20.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 2.5,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -20.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": -30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 40.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": 25.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": -40.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": 30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 45.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -20.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": -75.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 50.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": 40.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 75.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 45.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -45.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": -30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 40.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": 30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -10.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -45.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": -30.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 40.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": 25.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    },
+    {
+      "framesPerStep": 30,
+      "lowerBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftLegRotation": {
+        "x": 5.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftLegRotation": {
+        "x": -5.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightLegRotation": {
+        "x": 2.5,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightLegRotation": {
+        "x": -45.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperBodyRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperLeftArmRotation": {
+        "x": -20.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerLeftArmRotation": {
+        "x": 60.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "upperRightArmRotation": {
+        "x": 5.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "lowerRightArmRotation": {
+        "x": 75.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "headRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      }
+    }
+  ]
+}

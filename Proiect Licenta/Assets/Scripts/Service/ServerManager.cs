@@ -92,9 +92,9 @@ public class ServerManager : MonoBehaviour
         String url = String.Format("http://127.0.0.1:{0}/shutdown", _port); 
         UnityWebRequest getRequest = UnityWebRequest.Get(url);
 
-        yield return getRequest.Send();
+        yield return getRequest.SendWebRequest();
  
-        if(getRequest.isNetworkError) {
+        if(getRequest.result == UnityWebRequest.Result.ConnectionError) {
             Debug.Log(getRequest.error);
         }
         else {
