@@ -6,16 +6,17 @@ from matplotlib import pyplot as plt
 from rl.agents import DQNAgent
 from rl.memory import SequentialMemory
 from rl.policy import GreedyQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy
+from tensorflow import keras
 
 from models import create_primitive_model
 from environments import PrimitiveEnvironment
 
 EPISODE_LENGTH = 500
 REPEAT = 2
-EPISODES = 450
+EPISODES = 500
 ANNEAL_PERIOD = 50
 MEMORY = 10000
-BATCH = 1000
+BATCH = 2000
 
 
 def build_agent(model_p, actions_p):
@@ -71,10 +72,14 @@ model.summary()
 
 trainEnv = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH, repeat=REPEAT)
 
+lr_schedule = keras.optimizers.schedules.ExponentialDecay(
+    initial_learning_rate=1e-5,
+    decay_steps=1000,
+    decay_rate=0.8)
 dqn = build_agent(model, actions)
-dqn.compile(Adam(learning_rate=10e-7))
+dqn.compile(Adam(learning_rate=lr_schedule))
 scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=2)
-dqn.save_weights('../trained_models/model_0007', overwrite=True)
+dqn.save_weights('../trained_models/model_0012', overwrite=True)
 
 print(scores.history['episode_reward'])
 
