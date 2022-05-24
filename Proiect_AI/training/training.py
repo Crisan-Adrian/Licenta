@@ -72,8 +72,12 @@ model.summary()
 
 trainEnv = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH, repeat=REPEAT)
 
+lr_schedule = keras.optimizers.schedules.ExponentialDecay(
+    initial_learning_rate=1e-5,
+    decay_steps=1000,
+    decay_rate=0.8)
 dqn = build_agent(model, actions)
-dqn.compile(SGD(learning_rate=10e-7))
+dqn.compile(SGD(learning_rate=lr_schedule))
 scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=2)
 dqn.save_weights('../trained_models/model_0012', overwrite=True)
 
