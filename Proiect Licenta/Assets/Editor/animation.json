@@ -1,5 +1,5 @@
 {
-  "animationName": "WalkAnimation",
+  "animationName": "WalkAnimation_Deserialised",
   "steps": [
     {
       "framesPerStep": 30,

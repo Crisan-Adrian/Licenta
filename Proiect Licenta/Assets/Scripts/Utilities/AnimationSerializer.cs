@@ -24,9 +24,14 @@ namespace Utilities
             return String.Format("{{\"animationName\":\"{0}\",\n\"steps\":[\n{1}]\n}}", animation.name, steps);
         }
 
-        public static Animation AnimationFromJSON(string animationJSON)
+        public static AnimationDTO FromJSON(string animationJSON)
         {
-            return null;
+            AnimationDTO animationDto = new AnimationDTO();
+            animationDto = JsonUtility.FromJson<AnimationDTO>(animationJSON);
+            Debug.Log(animationDto.animationName);
+            Debug.Log(animationDto.steps.Count);
+            
+            return animationDto;
         }
 
         public static string ToJSON(AnimationStep step)
@@ -72,12 +77,6 @@ namespace Utilities
             string parts = String.Join(",\n", partsJSON);
 
             return String.Format("{{\n{0}\n}}", parts);
-        }
-
-
-        public static AnimationStep AnimationStepFromJSON(string stemJSON)
-        {
-            return null;
         }
     }
 }

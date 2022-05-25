@@ -180,14 +180,18 @@ public class AnimationEditorWindow : EditorWindow
 
     private void ImportAnimation()
     {
-        string savePath = EditorUtility.OpenFilePanel(
+        string openPath = EditorUtility.OpenFilePanel(
             "Import JSON animation",
             "Assets",
             "json");
 
-        if (savePath.Length != 0)
+        if (openPath.Length != 0)
         {
-            Debug.Log(savePath);
+            Debug.Log(openPath);
+            string json = File.ReadAllText(openPath);
+            AnimationDTO animationDto = AnimationSerializer.FromJSON(json);
+            animation = animationEditor.ImportAnimation(animationDto);
+            stepsCount = animation.animationSteps.Count;
         }
     }
 
