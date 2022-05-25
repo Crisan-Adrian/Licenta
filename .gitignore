@@ -1,8 +1,8 @@
 /.venv
 /.venv2
 /.idea
-/Proiect Licenta/Build
-/Proiect Licenta/Packages
+/Proiect_Licenta/Build
+/Proiect_Licenta/Packages
 
 #Ignore thumbnails created by Windows
 Thumbs.db
