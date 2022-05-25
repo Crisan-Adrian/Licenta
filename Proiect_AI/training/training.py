@@ -80,7 +80,7 @@ dqn.save_weights('../trained_models/model_Policy_Exp_0001', overwrite=True)
 
 print(scores.history['episode_reward'])
 
-filename = "train_rewards/Policy_Exp_0001_rewards.csv"
+filename = "../train_rewards/Policy_Exp_0001_rewards.csv"
 f = open(filename, mode="w")
 for x in scores.history['episode_reward']:
     f.write(str(x) + "\n")
