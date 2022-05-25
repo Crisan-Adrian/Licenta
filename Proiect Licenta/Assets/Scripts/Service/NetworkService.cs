@@ -23,9 +23,9 @@ public class NetworkService : MonoBehaviour
     {
         UnityWebRequest getRequest = UnityWebRequest.Get("http://127.0.0.1:5000/models");
 
-        yield return getRequest.Send();
+        yield return getRequest.SendWebRequest();
  
-        if(getRequest.isNetworkError) {
+        if(getRequest.result == UnityWebRequest.Result.ConnectionError) {
             Debug.Log(getRequest.error);
         }
         else {

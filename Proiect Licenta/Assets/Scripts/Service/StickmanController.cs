@@ -9,10 +9,9 @@ using Utilities;
 public class StickmanController : MonoBehaviour
 {
     //TODO clean-up code
-    
     [SerializeField] private bool loop = true;
     [SerializeField] private AnimationStep initialPose;
-    [SerializeField] private Animation animation;
+    [SerializeField] private Animation Animation { get; set; }
     [SerializeField] private float frameModifier = 1f;
     [SerializeField] private float epsilon = .5f;
     [SerializeField] private float overshootEpsilon = .0001f;
@@ -24,13 +23,11 @@ public class StickmanController : MonoBehaviour
 
     private OnFinishDelegate _onFinishDelegate;
 
-    private Dictionary<string, GameObject> _bodyParts = new Dictionary<string, GameObject>();
-    private Dictionary<string, Vector3> _animationStepComponents = new Dictionary<string, Vector3>();
-    private Dictionary<string, Vector3> _rotationsPerFrame = new Dictionary<string, Vector3>();
-    private List<string> keys = new List<string>();
-    private Dictionary<string, Vector3> _bodyEulerAngles = new Dictionary<string, Vector3>();
-    private bool wasBodyPartsSet = false;
-    private bool wasKeysSet = false;
+    private Dictionary<string, GameObject> _bodyParts = new();
+    private Dictionary<string, Vector3> _animationStepComponents = new();
+    private Dictionary<string, Vector3> _rotationsPerFrame = new();
+    private List<string> keys = new();
+    private Dictionary<string, Vector3> _bodyEulerAngles = new();
 
     
     
@@ -74,7 +71,6 @@ public class StickmanController : MonoBehaviour
         keys.Add("right_arm_upper");
         keys.Add("right_arm_lower");
         keys.Add("head");
-        wasKeysSet = true;
         Debug.Log("SetKeys");
     }
 
@@ -101,7 +97,6 @@ public class StickmanController : MonoBehaviour
         _bodyParts["right_arm_lower"] = GameObjectUtilities.FindChildWithName(gameObject,"Right_Arm_Lower");
         _bodyParts["right_arm_upper"] = GameObjectUtilities.FindChildWithName(gameObject,"Right_Arm_Upper");
         _bodyParts["head"] = GameObjectUtilities.FindChildWithName(gameObject,"Head");
-        wasBodyPartsSet = true;
         Debug.Log("SetBodyParts");
     }
 
@@ -359,7 +354,7 @@ public class StickmanController : MonoBehaviour
     private void UpdateWalkStepComponents()
     {
         _index++;
-        if (_index == animation.animationSteps.Count)
+        if (_index == GetComponent<Animation>().animationSteps.Count)
         {
             if (loop == true)
             {
@@ -377,7 +372,7 @@ public class StickmanController : MonoBehaviour
             _frames = 0;
         }
         
-        AnimationStep animationStep = animation.animationSteps[_index];
+        AnimationStep animationStep = GetComponent<Animation>().animationSteps[_index];
 
         _animationStepComponents["body_lower"] = animationStep.lowerBodyRotation;
         _animationStepComponents["body_upper"] = animationStep.upperBodyRotation;
@@ -432,14 +427,14 @@ public class StickmanController : MonoBehaviour
 
     public void SetAnimation()
     {
-        if (animation == null)
+        if (GetComponent<Animation>() == null)
         {
             EditorProxy editorProxy = EditorProxy.GetInstance();
-            animation = editorProxy.Animation;
+            Animation = editorProxy.Animation;
         }
-        if (animation.animationSteps.Count > 0)
+        if (GetComponent<Animation>().animationSteps.Count > 0)
         {
-            initialPose = animation.animationSteps[0];
+            initialPose = GetComponent<Animation>().animationSteps[0];
         }
     }
 }
