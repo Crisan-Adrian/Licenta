@@ -17,6 +17,12 @@ def build_agent(model_p, actions_p):
                     nb_steps_warmup=0, target_model_update=0.1, batch_size=1)
     return dqnA
 
+
+def normalize(input):
+    normalized = input / 360
+    return normalized
+
+
 primitiveDict = {
     '0': 0,
     '1': 0.25,
@@ -31,7 +37,7 @@ primitiveDict = {
 
 actions = len(primitiveDict)
 
-modelV = "trained_models/model_0010"
+modelV = "trained_models/model_0009"
 
 dataSet = pd.read_csv("datasets/dataSet_0000.csv")
 test = np.array(dataSet)
@@ -43,13 +49,11 @@ dqn = build_agent(model, actions)
 dqn.compile(SGD(learning_rate=10e-7))
 scores = dqn.test(testEnv, nb_episodes=1, visualize=False)
 
-
-for i in range(len(test)):
-    test_predict_arr = test[i].tolist()
-    print(test_predict_arr)
+    print(test_predict_arr[:8])
+    print(test_predict_arr[8:])
     results = []
     for j in range(n):
-        test_predict = np.array([test_predict_arr[j], test_predict_arr[n + j]])
+        test_predict = np.array([normalize(test_predict_arr[j]), normalize(test_predict_arr[n + j])])
         # test_predict1 = np.expand_dims(test_predict1, axis=0)
         # test_predict1 = np.expand_dims(test_predict1, axis=0)
 
