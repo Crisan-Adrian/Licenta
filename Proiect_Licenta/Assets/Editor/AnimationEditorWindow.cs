@@ -267,6 +267,7 @@ public class AnimationEditorWindow : EditorWindow
     private void AddAnimationStep()
     {
         _animationEditor.AddNewAnimationStep();
+        _stepsCount = _animation.animationSteps.Count;
         
         SetCurrentStep(_animation.animationSteps.Count - 1);
     }
