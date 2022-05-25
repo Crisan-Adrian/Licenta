@@ -7,23 +7,38 @@ using Utilities;
 
 public class AnimationEditor
 {
-    private AnimationStep defaultPose;
+    private AnimationStep _defaultPose;
     private Animation _animation;
     private string assetsPath = "Assets/Animations";
-    private string animationName;
+    private string _animationName;
 
     private int _index;
-    private List<string> keys = new List<string>();
-    private Dictionary<string, GameObject> _currentModelBodyParts = new Dictionary<string, GameObject>();
-    private Dictionary<string, GameObject> _pastModelBodyParts = new Dictionary<string, GameObject>();
+    private List<string> _keys = new();
+    private Dictionary<string, GameObject> _currentModelBodyParts = new();
+    private Dictionary<string, GameObject> _pastModelBodyParts = new();
 
     public AnimationEditor()
     {
     }
 
-    public void CreateNewAnimation()
+    public Animation CreateNewAnimation(string name)
     {
-        Debug.Log("New Animation Created");
+        AssetDatabase.SaveAssets();
+        _animation = ScriptableObject.CreateInstance<Animation>();
+        _animation.animationSteps = new List<AnimationStep>();
+        _animationName = name;
+        string result = AssetDatabase.CreateFolder(assetsPath, _animationName);
+        Debug.Log(result);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.CreateAsset(_animation, assetsPath + String.Format("/{0}/{0}.asset", _animationName));
+        AssetDatabase.SaveAssets();
+        AnimationStep animationStep = ScriptableObject.CreateInstance<AnimationStep>();
+        AssetDatabase.CreateAsset(animationStep,
+                assetsPath + String.Format("/{0}/{0}_Step_{1}.asset", _animationName, 1));
+            _animation.animationSteps.Add(animationStep);
+        AssetDatabase.SaveAssets();
+
+        return _animation;
     }
 
     public void SaveAnimation()
@@ -38,14 +53,14 @@ public class AnimationEditor
     public void SetAnimation(Animation animation)
     {
         _animation = animation;
-        animationName = animation.name;
-        Debug.Log(animationName);
+        _animationName = animation.name;
+        Debug.Log(_animationName);
     }
 
     public void AddNewAnimationStep()
     {
         AnimationStep newStep = ScriptableObject.CreateInstance<AnimationStep>();
-        string assetName = String.Format("/{0}_Step_{1}.asset", animationName, _animation.animationSteps.Count);
+        string assetName = String.Format("/{0}/{0}_Step_{1}.asset", _animationName, _animation.animationSteps.Count);
         _animation.animationSteps.Add(newStep);
 
         AssetDatabase.CreateAsset(newStep, assetsPath + assetName);
@@ -62,12 +77,12 @@ public class AnimationEditor
         AssetDatabase.SaveAssets();
         _animation = ScriptableObject.CreateInstance<Animation>();
         _animation.animationSteps = new List<AnimationStep>();
-        animationName = animationDto.animationName;
-        Debug.Log(animationName);
-        string result = AssetDatabase.CreateFolder(assetsPath, animationName);
+        _animationName = animationDto.animationName;
+        Debug.Log(_animationName);
+        string result = AssetDatabase.CreateFolder(assetsPath, _animationName);
         Debug.Log(result);
         AssetDatabase.SaveAssets();
-        AssetDatabase.CreateAsset(_animation, assetsPath + String.Format("/{0}/{0}.asset", animationName));
+        AssetDatabase.CreateAsset(_animation, assetsPath + String.Format("/{0}/{0}.asset", _animationName));
         AssetDatabase.SaveAssets();
         int i = 1;
         foreach (AnimationStepDTO stepDto in animationDto.steps)
@@ -75,7 +90,7 @@ public class AnimationEditor
         AnimationStep animationStep = ScriptableObject.CreateInstance<AnimationStep>();
         TransferData(animationStep, stepDto);
         AssetDatabase.CreateAsset(animationStep,
-            assetsPath + String.Format("/{0}/{0}_Step_{1}.asset", animationName, i));
+            assetsPath + String.Format("/{0}/{0}_Step_{1}.asset", _animationName, i));
         _animation.animationSteps.Add(animationStep);
         AssetDatabase.SaveAssets();
         i++;

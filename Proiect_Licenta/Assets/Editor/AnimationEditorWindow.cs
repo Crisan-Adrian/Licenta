@@ -9,8 +9,6 @@ using Utilities;
 
 public class AnimationEditorWindow : EditorWindow
 {
-    //TODO Try upgrade to Unity Version 2021.3 
-
     private string newAnimationButton = "Create New Animation";
     private string prevStepButton = "Prev Step";
     private string nextStepButton = "Next Step";
@@ -21,25 +19,25 @@ public class AnimationEditorWindow : EditorWindow
     private string previewAnimation = "Preview Animation";
     private string stopPreview = "Stop Preview";
 
-    private int currentStep;
-    private int stepsCount;
+    private int _currentStep;
+    private int _stepsCount;
 
-    private AnimationEditor animationEditor;
-    private Animation animation;
-    private GameObject animationModel;
+    private AnimationEditor _animationEditor;
+    private Animation _animation;
+    private GameObject _animationModel;
 
-    private GameObject previewModel;
-    private GameObject currentModel;
-    private GameObject pastModel;
+    private GameObject _previewModel;
+    private GameObject _currentModel;
+    private GameObject _pastModel;
 
-    private List<string> keys = new List<string>();
-    private Dictionary<string, GameObject> _currentModelBodyParts = new Dictionary<string, GameObject>();
-    private Dictionary<string, GameObject> _pastModelBodyParts = new Dictionary<string, GameObject>();
-    private bool editModeEnabled;
-    private Vector2 scrollPos;
-    private AnimationStep defaultPose;
-    private int tab;
-    private EditorCoroutine coroutine;
+    private List<string> _keys = new();
+    private Dictionary<string, GameObject> _currentModelBodyParts = new();
+    private Dictionary<string, GameObject> _pastModelBodyParts = new();
+    private bool _editModeEnabled;
+    private Vector2 _scrollPos;
+    private AnimationStep _defaultPose;
+    private int _tab;
+    private EditorCoroutine _coroutine;
 
     [MenuItem("Window/Animation Editor")]
     public static void ShowWindow()
@@ -49,8 +47,8 @@ public class AnimationEditorWindow : EditorWindow
 
     public void Awake()
     {
-        animationEditor = new AnimationEditor();
-        editModeEnabled = true;
+        _animationEditor = new AnimationEditor();
+        _editModeEnabled = true;
         minSize = new Vector2(375, 500);
     }
 
@@ -58,8 +56,8 @@ public class AnimationEditorWindow : EditorWindow
     {
         if (state == PlayModeStateChange.EnteredEditMode)
         {
-            editModeEnabled = true;
-            if (animationModel != null)
+            _editModeEnabled = true;
+            if (_animationModel != null)
             {
                 SetActiveObjects();
             }
@@ -73,8 +71,8 @@ public class AnimationEditorWindow : EditorWindow
 
     void OnGUI()
     {
-        tab = GUILayout.Toolbar(tab, new string[] {"Edit Animations", "Imitation "});
-        switch (tab)
+        _tab = GUILayout.Toolbar(_tab, new string[] {"Edit Animations", "Imitation "});
+        switch (_tab)
         {
             case 0:
                 ShowAnimationsTab();
@@ -95,16 +93,16 @@ public class AnimationEditorWindow : EditorWindow
         EditorGUILayout.Space();
         ShowAnimationSelector();
 
-        EditorGUI.BeginDisabledGroup(animationModel == null);
+        EditorGUI.BeginDisabledGroup(_animationModel == null);
         EditorGUILayout.BeginHorizontal();
-        EditorGUI.BeginDisabledGroup(!editModeEnabled);
+        EditorGUI.BeginDisabledGroup(!_editModeEnabled);
         if (GUILayout.Button(previewAnimation))
         {
             PreviewAnimation();
         }
 
         EditorGUI.EndDisabledGroup();
-        EditorGUI.BeginDisabledGroup(editModeEnabled);
+        EditorGUI.BeginDisabledGroup(_editModeEnabled);
         if (GUILayout.Button(stopPreview))
         {
             StopPreview();
@@ -117,7 +115,7 @@ public class AnimationEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button(newAnimationButton))
         {
-            animationEditor.CreateNewAnimation();
+            CreateNewAnimation();
         }
 
         if (GUILayout.Button(importAnimationButton))
@@ -134,30 +132,40 @@ public class AnimationEditorWindow : EditorWindow
 
         EditorGUILayout.EndHorizontal();
 
-        if (animation != null && editModeEnabled)
+        if (_animation != null && _editModeEnabled)
         {
             ShowAnimationDetails();
             EditorGUILayout.Space();
         }
     }
 
+    private void CreateNewAnimation()
+    {
+        string animationName = NewAnimationWindow.Open();
+        if (animationName != "")
+        {
+            _animation = _animationEditor.CreateNewAnimation(animationName);
+            _stepsCount = _animation.animationSteps.Count;
+        }
+    }
+
     private void PreviewAnimation()
     {
-        editModeEnabled = false;
-        StickmanEditorController stickmanEditorController = new StickmanEditorController();
-        stickmanEditorController.FrameModifier = 2;
-        stickmanEditorController.FrameRate = 60;
-        stickmanEditorController.Setup(animation, previewModel);
+        _editModeEnabled = false;
+        StickmanEditorController stickManEditorController = new StickmanEditorController();
+        stickManEditorController.FrameModifier = 2;
+        stickManEditorController.FrameRate = 60;
+        stickManEditorController.Setup(_animation, _previewModel);
         SetActiveObjects();
-        coroutine = this.StartCoroutine(
-            stickmanEditorController.StartPreview());
+        _coroutine = this.StartCoroutine(
+            stickManEditorController.StartPreview());
     }
 
     private void StopPreview()
     {
-        editModeEnabled = true;
+        _editModeEnabled = true;
         SetActiveObjects();
-        this.StopCoroutine(coroutine);
+        this.StopCoroutine(_coroutine);
     }
 
     private void ExportAnimation()
@@ -170,7 +178,7 @@ public class AnimationEditorWindow : EditorWindow
 
         if (savePath.Length != 0)
         {
-            string json = AnimationSerializer.ToJSON(animation);
+            string json = AnimationSerializer.ToJSON(_animation);
 
             File.WriteAllText(savePath, json);
             
@@ -190,34 +198,34 @@ public class AnimationEditorWindow : EditorWindow
             Debug.Log(openPath);
             string json = File.ReadAllText(openPath);
             AnimationDTO animationDto = AnimationSerializer.FromJSON(json);
-            animation = animationEditor.ImportAnimation(animationDto);
-            stepsCount = animation.animationSteps.Count;
+            _animation = _animationEditor.ImportAnimation(animationDto);
+            _stepsCount = _animation.animationSteps.Count;
         }
     }
 
     private void ShowDefaultPoseSelector()
     {
-        defaultPose =
-            (AnimationStep) EditorGUILayout.ObjectField("Default Pose:", defaultPose, typeof(AnimationStep), false);
+        _defaultPose =
+            (AnimationStep) EditorGUILayout.ObjectField("Default Pose:", _defaultPose, typeof(AnimationStep), false);
     }
 
     private void SetActiveObjects()
     {
-        previewModel.SetActive(!editModeEnabled);
-        currentModel.SetActive(editModeEnabled);
-        pastModel.SetActive(editModeEnabled);
+        _previewModel.SetActive(!_editModeEnabled);
+        _currentModel.SetActive(_editModeEnabled);
+        _pastModel.SetActive(_editModeEnabled);
     }
 
     private void ShowAnimationDetails()
     {
         EditorGUILayout.Separator();
 
-        scrollPos =
-            EditorGUILayout.BeginScrollView(scrollPos);
+        _scrollPos =
+            EditorGUILayout.BeginScrollView(_scrollPos);
         EditorGUILayout.LabelField("Animation Details");
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUI.BeginDisabledGroup(currentStep == 0);
+        EditorGUI.BeginDisabledGroup(_currentStep == 0);
         if (GUILayout.Button(prevStepButton))
         {
             StepBackwards();
@@ -229,7 +237,7 @@ public class AnimationEditorWindow : EditorWindow
             ResetPose();
         }
 
-        EditorGUI.BeginDisabledGroup(currentStep == stepsCount - 1);
+        EditorGUI.BeginDisabledGroup(_currentStep == _stepsCount - 1);
         if (GUILayout.Button(nextStepButton))
         {
             StepForwards();
@@ -244,13 +252,13 @@ public class AnimationEditorWindow : EditorWindow
         }
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField(String.Format("Animation Steps:{0}", stepsCount));
+        EditorGUILayout.LabelField(String.Format("Animation Steps:{0}", _stepsCount));
         EditorGUILayout.EndHorizontal();
-        currentStep = EditorGUILayout.IntField("Current Step:", currentStep, GUILayout.ExpandWidth(true));
+        _currentStep = EditorGUILayout.IntField("Current Step:", _currentStep, GUILayout.ExpandWidth(true));
 
         // Show current step inspector
 
-        Editor e = Editor.CreateEditor(animation.animationSteps[currentStep]);
+        Editor e = Editor.CreateEditor(_animation.animationSteps[_currentStep]);
 
         e.DrawDefaultInspector();
         EditorGUILayout.EndScrollView();
@@ -258,23 +266,23 @@ public class AnimationEditorWindow : EditorWindow
 
     private void AddAnimationStep()
     {
-        animationEditor.AddNewAnimationStep();
+        _animationEditor.AddNewAnimationStep();
         
-        SetCurrentStep(animation.animationSteps.Count - 1);
+        SetCurrentStep(_animation.animationSteps.Count - 1);
     }
 
     private void SetCurrentStep(int step)
     {
-        currentStep = step;
+        _currentStep = step;
         
-        int previousStep = currentStep - 1;
+        int previousStep = _currentStep - 1;
 
         if (previousStep >= 0)
         {
-            SetPastModelPose(animation.animationSteps[previousStep]);
+            SetPastModelPose(_animation.animationSteps[previousStep]);
         }
 
-        SetCurrentModelPose(animation.animationSteps[currentStep]);
+        SetCurrentModelPose(_animation.animationSteps[_currentStep]);
         Repaint();
     }
 
@@ -285,15 +293,15 @@ public class AnimationEditorWindow : EditorWindow
 
     private void StepForwards()
     {
-        Animation animation = animationEditor.GetCurrentAnimation();
-        currentStep++;
+        Animation animation = _animationEditor.GetCurrentAnimation();
+        _currentStep++;
 
-        int previousStep = currentStep - 1;
+        int previousStep = _currentStep - 1;
 
         SetPastModelPose(animation.animationSteps[previousStep]);
-        if (currentStep < animation.animationSteps.Count)
+        if (_currentStep < animation.animationSteps.Count)
         {
-            SetCurrentModelPose(animation.animationSteps[currentStep]);
+            SetCurrentModelPose(animation.animationSteps[_currentStep]);
         }
 
         Repaint();
@@ -301,39 +309,39 @@ public class AnimationEditorWindow : EditorWindow
 
     private void StepBackwards()
     {
-        Animation animation = animationEditor.GetCurrentAnimation();
+        Animation animation = _animationEditor.GetCurrentAnimation();
 
-        currentStep--;
+        _currentStep--;
 
-        int previousStep = currentStep - 1;
+        int previousStep = _currentStep - 1;
 
         if (previousStep >= 0)
         {
             SetPastModelPose(animation.animationSteps[previousStep]);
         }
 
-        SetCurrentModelPose(animation.animationSteps[currentStep]);
+        SetCurrentModelPose(animation.animationSteps[_currentStep]);
         Repaint();
     }
 
     private void ShowModelSelector()
     {
-        GameObject model = (GameObject) EditorGUILayout.ObjectField("Model:", animationModel, typeof(GameObject), true);
-        if (animationModel != model)
+        GameObject model = (GameObject) EditorGUILayout.ObjectField("Model:", _animationModel, typeof(GameObject), true);
+        if (_animationModel != model)
         {
-            animationModel = model;
+            _animationModel = model;
 
             NewModelSetup();
         }
 
-        if (animationModel == null)
+        if (_animationModel == null)
         {
             if (GUILayout.Button("Create Model"))
             {
                 Debug.Log("This will create and assign a model to the editor.");
                 GameObject prefab = (GameObject) AssetDatabase.LoadAssetAtPath("Assets/Editor/AnimationModel.prefab", typeof(GameObject));
                 Debug.Log(prefab);
-                animationModel = Instantiate(prefab);
+                _animationModel = Instantiate(prefab);
                 NewModelSetup();
             }
         }
@@ -341,35 +349,35 @@ public class AnimationEditorWindow : EditorWindow
 
     private void NewModelSetup()
     {
-        previewModel = GameObjectUtilities.FindChildWithName(animationModel, "Model");
-        currentModel = GameObjectUtilities.FindChildWithName(animationModel, "CurrentStep");
-        pastModel = GameObjectUtilities.FindChildWithName(animationModel, "PreviousStep");
+        _previewModel = GameObjectUtilities.FindChildWithName(_animationModel, "Model");
+        _currentModel = GameObjectUtilities.FindChildWithName(_animationModel, "CurrentStep");
+        _pastModel = GameObjectUtilities.FindChildWithName(_animationModel, "PreviousStep");
 
         SetActiveObjects();
 
-        SetBodyParts(_currentModelBodyParts, currentModel);
-        SetBodyParts(_pastModelBodyParts, pastModel);
+        SetBodyParts(_currentModelBodyParts, _currentModel);
+        SetBodyParts(_pastModelBodyParts, _pastModel);
     }
 
     private void ShowAnimationSelector()
     {
         Animation a;
-        a = (Animation) EditorGUILayout.ObjectField("Current Animation:", animation, typeof(Animation), false);
-        if (a == null && animationModel != null && defaultPose != null)
+        a = (Animation) EditorGUILayout.ObjectField("Current Animation:", _animation, typeof(Animation), false);
+        if (a == null && _animationModel != null && _defaultPose != null)
         {
-            SetPastModelPose(defaultPose);
-            SetCurrentModelPose(defaultPose);
+            SetPastModelPose(_defaultPose);
+            SetCurrentModelPose(_defaultPose);
         }
 
-        if (animation != a)
+        if (_animation != a)
         {
-            animation = a;
-            animationEditor.SetAnimation(a);
-            currentStep = 0;
-            stepsCount = animation.animationSteps.Count;
+            _animation = a;
+            _animationEditor.SetAnimation(a);
+            _currentStep = 0;
+            _stepsCount = _animation.animationSteps.Count;
 
             EditorProxy editorProxy = EditorProxy.GetInstance();
-            editorProxy.Animation = animation;
+            editorProxy.Animation = _animation;
         }
     }
 
