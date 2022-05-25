@@ -60,7 +60,7 @@ public class AnimationEditor
     public void AddNewAnimationStep()
     {
         AnimationStep newStep = ScriptableObject.CreateInstance<AnimationStep>();
-        string assetName = String.Format("/{0}/{0}_Step_{1}.asset", _animationName, _animation.animationSteps.Count);
+        string assetName = String.Format("/{0}/{0}_Step_{1}.asset", _animationName, _animation.animationSteps.Count + 1);
         _animation.animationSteps.Add(newStep);
 
         AssetDatabase.CreateAsset(newStep, assetsPath + assetName);
