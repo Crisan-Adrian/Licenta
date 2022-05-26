@@ -9,6 +9,9 @@ from environments import PrimitiveLiveEnvironment
 from models import create_primitive_model
 
 
+np.set_printoptions(precision=2)
+
+
 def build_agent(model_p, actions_p):
     policy = GreedyQPolicy()
     memory = SequentialMemory(limit=1, window_length=1)
@@ -37,7 +40,7 @@ primitiveDict = {
 
 actions = len(primitiveDict)
 
-modelV = "trained_models/model_0009"
+modelV = "trained_models/model_Size_Exp_0001"
 
 dataSet = pd.read_csv("datasets/dataSet_0000.csv")
 test = np.array(dataSet)
@@ -49,6 +52,7 @@ dqn = build_agent(model, actions)
 dqn.compile(SGD(learning_rate=10e-7))
 scores = dqn.test(testEnv, nb_episodes=1, visualize=False)
 
+for test_predict_arr in test:
     print(test_predict_arr[:8])
     print(test_predict_arr[8:])
     results = []
