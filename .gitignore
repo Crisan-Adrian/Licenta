@@ -1,10 +1,10 @@
-/.venv
-/.venv2
-/.idea
-/Proiect_Licenta/Build
-/Proiect_Licenta/Packages
+.venv/
+.venv2/
+.idea/
+Proiect_Licenta/Build/
+Proiect_Licenta/Packages/
 
-/Proiect_AI/environments/__pycache__
+Proiect_AI/environments/__pycache__/
 
 
 #Ignore thumbnails created by Windows
