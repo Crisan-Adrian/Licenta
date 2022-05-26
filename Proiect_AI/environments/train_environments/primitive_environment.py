@@ -4,6 +4,7 @@ import gym
 import numpy as np
 from gym.core import ObsType, ActType
 from gym.spaces import Discrete, Box, MultiDiscrete
+from numpy import exp
 
 
 def normalize(input):
@@ -75,7 +76,18 @@ class PrimitiveEnvironment(gym.Env):
             self.currentStep -= 1
 
         # print([self.current.tolist()[self.position], self.target.tolist()[self.position]])
-        state = [normalize(self.current[self.currentStep]), normalize(self.target[self.currentStep])]
+        # state = [normalize(self.current[self.currentStep]), normalize(self.target[self.currentStep])]
+
+        delta = self.target[self.currentStep] - self.current[self.currentStep]
+        current = self.current[self.currentStep]
+        z = exp(abs(delta))
+        current = normalize(current)
+        if delta >= 0:
+            target = 1 - (1 - current ** z) ** (1 / z)
+        else:
+            target = (1 - (1 - current) ** z) ** (1 / z)
+        state = [current, target]
+
         state = np.array(state)
         # print(state)
 
@@ -101,7 +113,18 @@ class PrimitiveEnvironment(gym.Env):
         self.target = (current + target).tolist()
         self.current = current.tolist()
 
-        state = [normalize(self.current[self.currentStep]), normalize(self.target[self.currentStep])]
+        # state = [normalize(self.current[self.currentStep]), normalize(self.target[self.currentStep])]
+
+        delta = self.target[self.currentStep] - self.current[self.currentStep]
+        current = self.current[self.currentStep]
+        z = exp(abs(delta))
+        current = normalize(current)
+        if delta >= 0:
+            target = 1 - (1 - current ** z) ** (1 / z)
+        else:
+            target = (1 - (1 - current) ** z) ** (1 / z)
+        state = [current, target]
+
         state = np.array(state)
         # print(state)
 

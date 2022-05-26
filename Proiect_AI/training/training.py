@@ -65,11 +65,11 @@ trainEnv = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH, rep
 dqn = build_agent(model, actions)
 dqn.compile(Adam(learning_rate=10e-7))
 scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=2)
-dqn.save_weights('../trained_models/model_Size_Exp_0001', overwrite=True)
+dqn.save_weights('../trained_models/model_Preprocessing_Exp_0001', overwrite=True)
 
 print(scores.history['episode_reward'])
 
-filename = "../train_rewards/Size_Exp_0001_rewards.csv"
+filename = "../train_rewards/Preprocessing_Exp_0001_rewards.csv"
 f = open(filename, mode="w")
 for x in scores.history['episode_reward']:
     f.write(str(x) + "\n")
