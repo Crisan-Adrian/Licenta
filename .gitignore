@@ -1,8 +1,11 @@
-/.venv
-/.venv2
-/.idea
-/Proiect_Licenta/Build
-/Proiect_Licenta/Packages
+**/.venv/
+**/.venv2/
+**/.idea/
+**/Proiect_Licenta/Build/
+**/Proiect_Licenta/Packages/
+
+**/__pycache__/
+
 
 #Ignore thumbnails created by Windows
 Thumbs.db
@@ -34,6 +37,7 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 .vs/
 #Nuget packages folder
+
 packages/
 
 .pyc
@@ -47,6 +51,18 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+__pycache__/
+
+*.pyc
+/Proiect_AI/environments/__pycache__/__init__.cpython-310.pyc
+/Proiect_AI/environments/__pycache__/__init__.cpython-310.pyc
+/Proiect_AI/environments/__pycache__/primitive_live_environment.cpython-310.pyc
+/Proiect_AI/environments/train_environments/__pycache__/__init__.cpython-310.pyc
+/Proiect_AI/environments/train_environments/__pycache__/iteration_environment.cpython-310.pyc
+/Proiect_AI/environments/train_environments/__pycache__/position_environment.cpython-310.pyc
+/Proiect_AI/environments/train_environments/__pycache__/primitive_environment.cpython-310.pyc
+/Proiect_AI/models/__pycache__/__init__.cpython-310.pyc
+/Proiect_AI/models/__pycache__/primitive_model.cpython-310.pyc
 .Python
 build/
 develop-eggs/

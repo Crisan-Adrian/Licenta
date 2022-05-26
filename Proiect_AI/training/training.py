@@ -1,26 +1,22 @@
-import datetime
-import numpy as np
-import pandas as pd
 from keras.optimizers import Adam
 from matplotlib import pyplot as plt
 from rl.agents import DQNAgent
 from rl.memory import SequentialMemory
 from rl.policy import GreedyQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy
-from tensorflow import keras
- 
-from models import create_primitive_model
+
 from environments import PrimitiveEnvironment
+from models import create_primitive_model2
 
 EPISODE_LENGTH = 500
 REPEAT = 2
 EPISODES = 500
-ANNEAL_PERIOD = 200
+ANNEAL_PERIOD = 50
 MEMORY = 10000
 BATCH = 1000
 
 
 def build_agent(model_p, actions_p):
-    policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1., value_min=.05, value_test=.05,
+    policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1., value_min=.1, value_test=.05,
                                   nb_steps=EPISODE_LENGTH * REPEAT * ANNEAL_PERIOD)
     test_policy = GreedyQPolicy()
     memory = SequentialMemory(limit=MEMORY, window_length=1)
@@ -29,11 +25,6 @@ def build_agent(model_p, actions_p):
                     nb_steps_warmup=EPISODE_LENGTH * REPEAT, target_model_update=0.1, batch_size=BATCH)
     return dqnA
 
-
-dataSet = pd.read_csv("../datasets/dataSet_0000.csv")
-
-test = np.array(dataSet)
-n = test.shape[1] // 2
 
 primitiveDict = {
     '0': 0,
@@ -65,22 +56,20 @@ for episode in range(1, episodes + 1):
         score += reward
     print(f'Episode: {episode}, Score:{score}')
 
-model = create_primitive_model(states, actions)
-target_model = create_primitive_model(states, actions)
+model = create_primitive_model2(states, actions)
 
 model.summary()
 
 trainEnv = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH, repeat=REPEAT)
 
-
 dqn = build_agent(model, actions)
 dqn.compile(Adam(learning_rate=10e-7))
 scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=2)
-dqn.save_weights('../trained_models/model_Policy_Exp_0001', overwrite=True)
+dqn.save_weights('../trained_models/model_Size_Exp_0001', overwrite=True)
 
 print(scores.history['episode_reward'])
 
-filename = "../train_rewards/Policy_Exp_0001_rewards.csv"
+filename = "../train_rewards/Size_Exp_0001_rewards.csv"
 f = open(filename, mode="w")
 for x in scores.history['episode_reward']:
     f.write(str(x) + "\n")
