@@ -5,7 +5,7 @@ from rl.memory import SequentialMemory
 from rl.policy import GreedyQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy
 
 from environments import PrimitiveEnvironment
-from models import create_primitive_model2
+from models import create_primitive_model
 
 EPISODE_LENGTH = 500
 REPEAT = 2
@@ -56,7 +56,7 @@ for episode in range(1, episodes + 1):
         score += reward
     print(f'Episode: {episode}, Score:{score}')
 
-model = create_primitive_model2(states, actions)
+model = create_primitive_model(states, actions)
 
 model.summary()
 
