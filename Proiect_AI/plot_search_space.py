@@ -63,7 +63,7 @@ def _f(x, y):
     return _z
 
 
-size = 5000
+size = 1000
 x = np.random.uniform(0, 360, size=size)
 y = np.random.uniform(-1.75, 1.75, size=size)
 y = (x + y).tolist()
@@ -80,8 +80,8 @@ x = [normalize(i) for i in x]
 ax = plt.axes(projection='3d')
 ax.scatter(x, y, z, c=z, linewidth=0.5, cmap='viridis')
 ax.view_init(elev=50., azim=-135)
-# plt.show()
-plt.savefig("Preprocessed_Primitives_Scatter")
+plt.show()
+# plt.savefig("Preprocessed_Primitives_Scatter")
 
 # x = np.random.uniform(0, 360, size=size)
 # y = np.random.uniform(-1.75, 1.75, size=size)

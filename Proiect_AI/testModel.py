@@ -40,7 +40,7 @@ primitiveDict = {
 
 actions = len(primitiveDict)
 
-modelV = "trained_models/model_Size_Exp_0001"
+modelV = "trained_models/model_Preprocessing_Exp_0001"
 
 dataSet = pd.read_csv("datasets/dataSet_0000.csv")
 test = np.array(dataSet)
