@@ -41,15 +41,6 @@ public class AnimationEditor
         return _animation;
     }
 
-    public void SaveAnimation()
-    {
-    }
-
-    public string ExportAnimation()
-    {
-        return "";
-    }
-
     public void SetAnimation(Animation animation)
     {
         _animation = animation;

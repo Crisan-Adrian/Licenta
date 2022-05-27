@@ -74,14 +74,15 @@ for i in range(len(y)):
         y[i] += 360
 x = x.tolist()
 z = f(x, y)
-y = fisheye(x, y)
+# y = fisheye(x, y)
 x = [normalize(i) for i in x]
+y = [normalize(i) for i in y]
 
 ax = plt.axes(projection='3d')
 ax.scatter(x, y, z, c=z, linewidth=0.5, cmap='viridis')
 ax.view_init(elev=50., azim=-135)
-plt.show()
-# plt.savefig("Preprocessed_Primitives_Scatter")
+# plt.show()
+plt.savefig("Unprocessed_Primitives_Scatter")
 
 # x = np.random.uniform(0, 360, size=size)
 # y = np.random.uniform(-1.75, 1.75, size=size)

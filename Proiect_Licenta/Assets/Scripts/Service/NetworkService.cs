@@ -5,15 +5,16 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using Unity.EditorCoroutines.Editor;
 
-public class NetworkService : MonoBehaviour
+public class NetworkService
 {
     //TODO make into singleton
     private static HttpClient _client = new HttpClient();
 
     public async void RunTask()
     {
-        StartCoroutine(SendGetRequest());
+        // EditorStartCoroutine(SendGetRequest());
 
         var msg = await _client.GetAsync("http://127.0.0.1:5000/models");
         Debug.Log(String.Format("Response {0}", msg));

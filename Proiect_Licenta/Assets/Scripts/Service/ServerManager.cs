@@ -6,8 +6,9 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 using Debug = UnityEngine.Debug;
+using Unity.EditorCoroutines.Editor;
 
-public class ServerManager : MonoBehaviour
+public class ServerManager
 {
     //TODO clean-up code
     private Process _serverProcess;
@@ -72,7 +73,7 @@ public class ServerManager : MonoBehaviour
         {
             try
             {
-                StartCoroutine(SendKillRequest());
+                // StartCoroutine(SendKillRequest());
                 _serverProcess.Kill();
             }
             catch (Exception e)

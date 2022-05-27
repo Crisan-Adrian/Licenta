@@ -649,12 +649,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 382003237}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &438006724 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6870765114503012739, guid: c3525da8c39bcd0488bbbb8c4e474c84,
-    type: 3}
-  m_PrefabInstance: {fileID: 6870765114937725511}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &505685174
 GameObject:
   m_ObjectHideFlags: 0
@@ -885,7 +879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2213f46b579c724a9ce494f6d664660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  observationTarget: {fileID: 438006724}
+  observationTarget: {fileID: 0}
   observationFilter:
   - right_arm_upper
   - right_arm_lower
@@ -1029,7 +1023,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &581329422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1044,6 +1038,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loop: 1
   initialPose: {fileID: 11400000, guid: 02ca29b964973e14396fb3154e26e418, type: 2}
+  animation: {fileID: 0}
   frameModifier: 1
   epsilon: 0.05
   overshootEpsilon: 0.09
@@ -2089,7 +2084,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   focusTargets:
-  - {fileID: 438006724}
+  - {fileID: 0}
   - {fileID: 553651201}
   cameraOffset: {x: 0, y: 7, z: -12}
   targetOffset: {x: 0, y: 7, z: 0}
@@ -4292,7 +4287,7 @@ PrefabInstance:
     - target: {fileID: 6870765116607860532, guid: c3525da8c39bcd0488bbbb8c4e474c84,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3525da8c39bcd0488bbbb8c4e474c84, type: 3}

@@ -11,7 +11,7 @@ public class StickmanController : MonoBehaviour
     //TODO clean-up code
     [SerializeField] private bool loop = true;
     [SerializeField] private AnimationStep initialPose;
-    [SerializeField] private Animation Animation { get; set; }
+    [SerializeField] private Animation animation;
     [SerializeField] private float frameModifier = 1f;
     [SerializeField] private float epsilon = .5f;
     [SerializeField] private float overshootEpsilon = .0001f;
@@ -50,8 +50,6 @@ public class StickmanController : MonoBehaviour
         SetKeys();
 
         SetBodyParts();
-        
-        SetAnimation();
 
         SetInitialRotations();
         
@@ -424,17 +422,5 @@ public class StickmanController : MonoBehaviour
 
         return walkStepComplete;
     }
-
-    public void SetAnimation()
-    {
-        if (GetComponent<Animation>() == null)
-        {
-            EditorProxy editorProxy = EditorProxy.GetInstance();
-            Animation = editorProxy.Animation;
-        }
-        if (GetComponent<Animation>().animationSteps.Count > 0)
-        {
-            initialPose = GetComponent<Animation>().animationSteps[0];
-        }
-    }
+    
 }

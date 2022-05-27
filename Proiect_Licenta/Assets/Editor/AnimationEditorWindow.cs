@@ -26,18 +26,15 @@ public class AnimationEditorWindow : EditorWindow
     private Animation _animation;
     private GameObject _animationModel;
 
-    private GameObject _previewModel;
     private GameObject _currentModel;
     private GameObject _pastModel;
 
-    private List<string> _keys = new();
-    private Dictionary<string, GameObject> _currentModelBodyParts = new();
-    private Dictionary<string, GameObject> _pastModelBodyParts = new();
-    private bool _editModeEnabled;
     private Vector2 _scrollPos;
     private AnimationStep _defaultPose;
     private int _tab;
     private EditorCoroutine _coroutine;
+
+    private StickmanEditorController _stickmanController;
 
     [MenuItem("Window/Animation Editor")]
     public static void ShowWindow()
@@ -48,25 +45,12 @@ public class AnimationEditorWindow : EditorWindow
     public void Awake()
     {
         _animationEditor = new AnimationEditor();
-        _editModeEnabled = true;
         minSize = new Vector2(375, 500);
-    }
-
-    private void LogPlayModeState(PlayModeStateChange state)
-    {
-        if (state == PlayModeStateChange.EnteredEditMode)
-        {
-            _editModeEnabled = true;
-            if (_animationModel != null)
-            {
-                SetActiveObjects();
-            }
-        }
     }
 
     private void OnEnable()
     {
-        EditorApplication.playModeStateChanged += LogPlayModeState;
+        _stickmanController = new StickmanEditorController();
     }
 
     void OnGUI()
@@ -93,25 +77,6 @@ public class AnimationEditorWindow : EditorWindow
         EditorGUILayout.Space();
         ShowAnimationSelector();
 
-        EditorGUI.BeginDisabledGroup(_animationModel == null);
-        EditorGUILayout.BeginHorizontal();
-        EditorGUI.BeginDisabledGroup(!_editModeEnabled);
-        if (GUILayout.Button(previewAnimation))
-        {
-            PreviewAnimation();
-        }
-
-        EditorGUI.EndDisabledGroup();
-        EditorGUI.BeginDisabledGroup(_editModeEnabled);
-        if (GUILayout.Button(stopPreview))
-        {
-            StopPreview();
-        }
-
-        EditorGUI.EndDisabledGroup();
-        EditorGUILayout.EndHorizontal();
-        EditorGUI.EndDisabledGroup();
-
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button(newAnimationButton))
         {
@@ -132,7 +97,7 @@ public class AnimationEditorWindow : EditorWindow
 
         EditorGUILayout.EndHorizontal();
 
-        if (_animation != null && _editModeEnabled)
+        if (_animation != null)
         {
             ShowAnimationDetails();
             EditorGUILayout.Space();
@@ -149,25 +114,6 @@ public class AnimationEditorWindow : EditorWindow
         }
     }
 
-    private void PreviewAnimation()
-    {
-        _editModeEnabled = false;
-        StickmanEditorController stickManEditorController = new StickmanEditorController();
-        stickManEditorController.FrameModifier = 2;
-        stickManEditorController.FrameRate = 60;
-        stickManEditorController.Setup(_animation, _previewModel);
-        SetActiveObjects();
-        _coroutine = this.StartCoroutine(
-            stickManEditorController.StartPreview());
-    }
-
-    private void StopPreview()
-    {
-        _editModeEnabled = true;
-        SetActiveObjects();
-        this.StopCoroutine(_coroutine);
-    }
-
     private void ExportAnimation()
     {
         string savePath = EditorUtility.SaveFilePanel(
@@ -181,8 +127,6 @@ public class AnimationEditorWindow : EditorWindow
             string json = AnimationSerializer.ToJSON(_animation);
 
             File.WriteAllText(savePath, json);
-            
-            // Debug.Log(json);
         }
     }
 
@@ -207,13 +151,6 @@ public class AnimationEditorWindow : EditorWindow
     {
         _defaultPose =
             (AnimationStep) EditorGUILayout.ObjectField("Default Pose:", _defaultPose, typeof(AnimationStep), false);
-    }
-
-    private void SetActiveObjects()
-    {
-        _previewModel.SetActive(!_editModeEnabled);
-        _currentModel.SetActive(_editModeEnabled);
-        _pastModel.SetActive(_editModeEnabled);
     }
 
     private void ShowAnimationDetails()
@@ -280,10 +217,10 @@ public class AnimationEditorWindow : EditorWindow
 
         if (previousStep >= 0)
         {
-            SetPastModelPose(_animation.animationSteps[previousStep]);
+            _stickmanController.SetPastModelPose(_animation.animationSteps[previousStep]);
         }
 
-        SetCurrentModelPose(_animation.animationSteps[_currentStep]);
+        _stickmanController.SetCurrentModelPose(_animation.animationSteps[_currentStep]);
         Repaint();
     }
 
@@ -299,10 +236,10 @@ public class AnimationEditorWindow : EditorWindow
 
         int previousStep = _currentStep - 1;
 
-        SetPastModelPose(animation.animationSteps[previousStep]);
+        _stickmanController.SetPastModelPose(animation.animationSteps[previousStep]);
         if (_currentStep < animation.animationSteps.Count)
         {
-            SetCurrentModelPose(animation.animationSteps[_currentStep]);
+            _stickmanController.SetCurrentModelPose(animation.animationSteps[_currentStep]);
         }
 
         Repaint();
@@ -318,10 +255,10 @@ public class AnimationEditorWindow : EditorWindow
 
         if (previousStep >= 0)
         {
-            SetPastModelPose(animation.animationSteps[previousStep]);
+            _stickmanController.SetPastModelPose(animation.animationSteps[previousStep]);
         }
 
-        SetCurrentModelPose(animation.animationSteps[_currentStep]);
+        _stickmanController.SetCurrentModelPose(animation.animationSteps[_currentStep]);
         Repaint();
     }
 
@@ -350,14 +287,10 @@ public class AnimationEditorWindow : EditorWindow
 
     private void NewModelSetup()
     {
-        _previewModel = GameObjectUtilities.FindChildWithName(_animationModel, "Model");
         _currentModel = GameObjectUtilities.FindChildWithName(_animationModel, "CurrentStep");
         _pastModel = GameObjectUtilities.FindChildWithName(_animationModel, "PreviousStep");
 
-        SetActiveObjects();
-
-        SetBodyParts(_currentModelBodyParts, _currentModel);
-        SetBodyParts(_pastModelBodyParts, _pastModel);
+        _stickmanController.SetModels(_currentModel, _pastModel);
     }
 
     private void ShowAnimationSelector()
@@ -366,8 +299,8 @@ public class AnimationEditorWindow : EditorWindow
         a = (Animation) EditorGUILayout.ObjectField("Current Animation:", _animation, typeof(Animation), false);
         if (a == null && _animationModel != null && _defaultPose != null)
         {
-            SetPastModelPose(_defaultPose);
-            SetCurrentModelPose(_defaultPose);
+            _stickmanController.SetPastModelPose(_defaultPose);
+            _stickmanController.SetCurrentModelPose(_defaultPose);
         }
 
         if (_animation != a)
@@ -376,60 +309,6 @@ public class AnimationEditorWindow : EditorWindow
             _animationEditor.SetAnimation(a);
             _currentStep = 0;
             _stepsCount = _animation.animationSteps.Count;
-
-            EditorProxy editorProxy = EditorProxy.GetInstance();
-            editorProxy.Animation = _animation;
         }
-    }
-
-    private void SetBodyParts(Dictionary<string, GameObject> modelBodyParts, GameObject target)
-    {
-        modelBodyParts["body_lower"] = GameObjectUtilities.FindChildWithName(target, "Body_Lower");
-        modelBodyParts["body_upper"] = GameObjectUtilities.FindChildWithName(target, "Body_Upper");
-        modelBodyParts["left_leg_lower"] = GameObjectUtilities.FindChildWithName(target, "Left_Leg_Lower");
-        modelBodyParts["left_leg_upper"] = GameObjectUtilities.FindChildWithName(target, "Left_Leg_Upper");
-        modelBodyParts["right_leg_lower"] = GameObjectUtilities.FindChildWithName(target, "Right_Leg_Lower");
-        modelBodyParts["right_leg_upper"] = GameObjectUtilities.FindChildWithName(target, "Right_Leg_Upper");
-        modelBodyParts["left_arm_lower"] = GameObjectUtilities.FindChildWithName(target, "Left_Arm_Lower");
-        modelBodyParts["left_arm_upper"] = GameObjectUtilities.FindChildWithName(target, "Left_Arm_Upper");
-        modelBodyParts["right_arm_lower"] = GameObjectUtilities.FindChildWithName(target, "Right_Arm_Lower");
-        modelBodyParts["right_arm_upper"] = GameObjectUtilities.FindChildWithName(target, "Right_Arm_Upper");
-        modelBodyParts["head"] = GameObjectUtilities.FindChildWithName(target, "Head");
-    }
-
-    private void SetPastModelPose(AnimationStep animationStep)
-    {
-        SetPose(animationStep, _pastModelBodyParts);
-    }
-
-    private void SetCurrentModelPose(AnimationStep animationStep)
-    {
-        SetPose(animationStep, _currentModelBodyParts);
-    }
-
-    private void SetPose(AnimationStep animationStep, Dictionary<string, GameObject> model)
-    {
-        SetBodyPartRotation(model["body_lower"], animationStep.lowerBodyRotation);
-        SetBodyPartRotation(model["body_upper"], animationStep.upperBodyRotation);
-
-        SetBodyPartRotation(model["left_leg_lower"], animationStep.lowerLeftLegRotation);
-        SetBodyPartRotation(model["left_leg_upper"], animationStep.upperLeftLegRotation);
-
-        SetBodyPartRotation(model["right_leg_lower"], animationStep.lowerRightLegRotation);
-        SetBodyPartRotation(model["right_leg_upper"], animationStep.upperRightLegRotation);
-
-        SetBodyPartRotation(model["left_arm_lower"], animationStep.lowerLeftArmRotation);
-        SetBodyPartRotation(model["left_arm_upper"], animationStep.upperLeftArmRotation);
-
-        SetBodyPartRotation(model["right_arm_lower"], animationStep.lowerRightArmRotation);
-        SetBodyPartRotation(model["right_arm_upper"], animationStep.upperRightArmRotation);
-
-        SetBodyPartRotation(model["head"], animationStep.headRotation);
-    }
-
-    private void SetBodyPartRotation(GameObject bodyPart, Vector3 initialPoseBodyRotation)
-    {
-        Quaternion quaternion = Quaternion.Euler(initialPoseBodyRotation);
-        bodyPart.transform.localRotation = quaternion;
     }
 }
