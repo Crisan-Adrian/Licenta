@@ -1,12 +1,13 @@
 import numpy as np
 import pandas as pd
+from numpy import exp
 from rl.agents import DQNAgent
 from rl.memory import SequentialMemory
 from rl.policy import GreedyQPolicy
 from keras.optimizers import SGD
 
 from environments import PrimitiveLiveEnvironment
-from models import create_primitive_model
+from models import create_primitive_model3
 
 
 np.set_printoptions(precision=2)
@@ -40,24 +41,37 @@ primitiveDict = {
 
 actions = len(primitiveDict)
 
-modelV = "trained_models/model_Preprocessing_Exp_0001"
+modelV = "trained_models/model_Very_Small_NN_Exp"
 
 dataSet = pd.read_csv("datasets/dataSet_0000.csv")
 test = np.array(dataSet)
 n = test.shape[1] // 2
 testEnv = PrimitiveLiveEnvironment(test, primitiveDict)
 states = testEnv.get_shape()
-model = create_primitive_model(states, actions)
+model = create_primitive_model3(states, actions)
 dqn = build_agent(model, actions)
-dqn.compile(SGD(learning_rate=10e-7))
-scores = dqn.test(testEnv, nb_episodes=1, visualize=False)
+dqn.compile(SGD(learning_rate=10e-6))
+
+model.summary()
+
+# scores = dqn.test(testEnv, nb_episodes=1, visualize=False)
 
 for test_predict_arr in test:
     print(test_predict_arr[:8])
     print(test_predict_arr[8:])
     results = []
     for j in range(n):
-        test_predict = np.array([normalize(test_predict_arr[j]), normalize(test_predict_arr[n + j])])
+        delta = test_predict_arr[n+j] - test_predict_arr[j]
+        current = test_predict_arr[j]
+        z = exp(abs(delta))
+        current = normalize(current)
+        if delta >= 0:
+            target = 1 - (1 - current ** z) ** (1 / z)
+        else:
+            target = (1 - (1 - current) ** z) ** (1 / z)
+        test_predict = np.array([current, target])
+
+        # test_predict = np.array([normalize(test_predict_arr[j]), normalize(test_predict_arr[n + j])])
         # test_predict1 = np.expand_dims(test_predict1, axis=0)
         # test_predict1 = np.expand_dims(test_predict1, axis=0)
 
