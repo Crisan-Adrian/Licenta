@@ -70,11 +70,11 @@ lr_schedule = keras.optimizers.schedules.ExponentialDecay(
 dqn = build_agent(model, actions)
 dqn.compile(Adam(learning_rate=10e-6))
 scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=2)
-dqn.save_weights('../trained_models/model_Preprocessing_Exp_0002', overwrite=True)
+dqn.save_weights('../trained_models/model_Very_Small_NN_Exp', overwrite=True)
 
 print(scores.history['episode_reward'])
 
-filename = "../train_rewards/Preprocessing_Exp_0002_rewards.csv"
+filename = "../train_rewards/Very_Small_NN_Exp_rewards.csv"
 f = open(filename, mode="w")
 for x in scores.history['episode_reward']:
     f.write(str(x) + "\n")
