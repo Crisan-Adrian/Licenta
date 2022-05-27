@@ -10,9 +10,9 @@ from models import create_primitive_model3
 
 EPISODE_LENGTH = 500
 REPEAT = 2
-EPISODES = 500
-ANNEAL_PERIOD = 50
-MEMORY = 10000
+EPISODES = 1000
+ANNEAL_PERIOD = 100
+MEMORY = 20000
 BATCH = 1000
 
 
@@ -70,11 +70,11 @@ lr_schedule = keras.optimizers.schedules.ExponentialDecay(
 dqn = build_agent(model, actions)
 dqn.compile(Adam(learning_rate=10e-6))
 scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=2)
-dqn.save_weights('../trained_models/model_Very_Small_NN_Exp', overwrite=True)
+dqn.save_weights('../trained_models/model_Small_NN_Exp', overwrite=True)
 
 print(scores.history['episode_reward'])
 
-filename = "../train_rewards/Very_Small_NN_Exp_rewards.csv"
+filename = "../train_rewards/Small_NN_Exp_rewards.csv"
 f = open(filename, mode="w")
 for x in scores.history['episode_reward']:
     f.write(str(x) + "\n")
