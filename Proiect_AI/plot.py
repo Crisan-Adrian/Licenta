@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 headers = ['reward']
 plt.rcParams["figure.dpi"] = 200
 
-df = pd.read_csv('train_rewards/Preprocessing_Exp_0001_rewards.csv', names=headers)
+df = pd.read_csv('train_rewards/Small_NN_Exp_rewards.csv', names=headers)
 # df['idx'] = range(1, len(df) + 1)
 # print(df)
 

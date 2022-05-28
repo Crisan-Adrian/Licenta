@@ -41,7 +41,7 @@ primitiveDict = {
 
 actions = len(primitiveDict)
 
-modelV = "trained_models/model_Very_Small_NN_Exp"
+modelV = "trained_models/model_Small_NN_Exp"
 
 dataSet = pd.read_csv("datasets/dataSet_0000.csv")
 test = np.array(dataSet)
