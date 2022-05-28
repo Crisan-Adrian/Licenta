@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using Unity.EditorCoroutines.Editor;
+using Random = UnityEngine.Random;
 
 public class NetworkService
 {
@@ -33,5 +34,16 @@ public class NetworkService
             // Show results as text
             Debug.Log(getRequest.downloadHandler.text);
         }
+    }
+
+    public static bool CheckServerStatus()
+    {
+        int a = Random.Range(0, 2);
+        if (a == 1)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

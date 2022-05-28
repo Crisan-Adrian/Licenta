@@ -16,8 +16,6 @@ public class AnimationEditorWindow : EditorWindow
     private string addStepButton = "Add Step";
     private string exportAnimationButton = "Export Animation";
     private string importAnimationButton = "Import Animation";
-    private string previewAnimation = "Preview Animation";
-    private string stopPreview = "Stop Preview";
 
     private int _currentStep;
     private int _stepsCount;
@@ -36,6 +34,9 @@ public class AnimationEditorWindow : EditorWindow
 
     private StickmanEditorController _stickmanController;
 
+    private GUIStyle _style;
+    private bool _serverStatus;
+
     [MenuItem("Window/Animation Editor")]
     public static void ShowWindow()
     {
@@ -46,6 +47,10 @@ public class AnimationEditorWindow : EditorWindow
     {
         _animationEditor = new AnimationEditor();
         minSize = new Vector2(375, 500);
+        _style = new GUIStyle("label");
+        _style.normal.textColor = Color.yellow;
+        _style.fontStyle = FontStyle.Bold;
+        _style.fontSize = 40;
     }
 
     private void OnEnable()
@@ -62,6 +67,7 @@ public class AnimationEditorWindow : EditorWindow
                 ShowAnimationsTab();
                 break;
             case 1:
+                ShowImitationTab();
                 break;
             default:
                 break;
@@ -167,6 +173,7 @@ public class AnimationEditorWindow : EditorWindow
         {
             StepBackwards();
         }
+
         EditorGUI.EndDisabledGroup();
 
         if (GUILayout.Button(resetPoseButton))
@@ -182,7 +189,7 @@ public class AnimationEditorWindow : EditorWindow
 
         EditorGUI.EndDisabledGroup();
         EditorGUILayout.EndHorizontal();
-        
+
         if (GUILayout.Button(addStepButton))
         {
             AddAnimationStep();
@@ -205,14 +212,14 @@ public class AnimationEditorWindow : EditorWindow
     {
         _animationEditor.AddNewAnimationStep();
         _stepsCount = _animation.animationSteps.Count;
-        
+
         SetCurrentStep(_animation.animationSteps.Count - 1);
     }
 
     private void SetCurrentStep(int step)
     {
         _currentStep = step;
-        
+
         int previousStep = _currentStep - 1;
 
         if (previousStep >= 0)
@@ -264,7 +271,8 @@ public class AnimationEditorWindow : EditorWindow
 
     private void ShowModelSelector()
     {
-        GameObject model = (GameObject) EditorGUILayout.ObjectField("Model:", _animationModel, typeof(GameObject), true);
+        GameObject model =
+            (GameObject) EditorGUILayout.ObjectField("Model:", _animationModel, typeof(GameObject), true);
         if (_animationModel != model)
         {
             _animationModel = model;
@@ -277,7 +285,9 @@ public class AnimationEditorWindow : EditorWindow
             if (GUILayout.Button("Create Model"))
             {
                 Debug.Log("This will create and assign a model to the editor.");
-                GameObject prefab = (GameObject) AssetDatabase.LoadAssetAtPath("Assets/Editor/AnimationModel.prefab", typeof(GameObject));
+                GameObject prefab =
+                    (GameObject) AssetDatabase.LoadAssetAtPath("Assets/Editor/AnimationModel.prefab",
+                        typeof(GameObject));
                 Debug.Log(prefab);
                 _animationModel = Instantiate(prefab);
                 NewModelSetup();
@@ -310,5 +320,53 @@ public class AnimationEditorWindow : EditorWindow
             _currentStep = 0;
             _stepsCount = _animation.animationSteps.Count;
         }
+    }
+
+    private void ShowImitationTab()
+    {
+        EditorGUILayout.Space();
+        EditorGUILayout.BeginHorizontal(GUILayout.MaxHeight(25));
+        GUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
+        GUILayout.Label("·", _style, GUILayout.Width(20));
+        GUILayout.FlexibleSpace();
+        GUILayout.EndVertical();
+
+        GUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Check Server", GUILayout.ExpandWidth(true)))
+        {
+            CheckServerStatus();
+        }
+        GUILayout.FlexibleSpace();
+        GUILayout.EndVertical();
+
+        GUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Kill Server", GUILayout.ExpandWidth(true)))
+        {
+            Debug.Log("Kill Server");
+            // KillServer();
+        }
+        GUILayout.FlexibleSpace();
+        GUILayout.EndVertical();
+        EditorGUILayout.EndHorizontal();
+
+        if (GUILayout.Button("AAAAAAAAAAAAAA"))
+        {
+            Debug.Log("AAAAAAAAAAA");
+        }
+    }
+
+    private void CheckServerStatus()
+    {
+        bool isRunning = NetworkService.CheckServerStatus();
+
+        _style.normal.textColor = isRunning ? Color.green : Color.red;
+
+        string message = isRunning ? "Server is running" : "Server is not running";
+
+        EditorUtility.DisplayDialog("Server Status", message, "Ok");
+        Repaint();
     }
 }
