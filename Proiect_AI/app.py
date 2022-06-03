@@ -60,7 +60,7 @@ def delete_model():
     modelName = data['modelName']
     modelType = data['modelType']
     result = repository.delete_model(modelName, modelType)
-    respT = make_response('ModelDeleted', 200)
+    respT = make_response('Model deleted', 200)
     respF = make_response('Model not found', 404)
     if result:
         return respT
@@ -133,6 +133,11 @@ def make_prediction(requestName, models):
     prediction.make_prediction(primitive_model, position_model, iteration_model)
     repository.find_request(requestName)
 
+
+@app.get('/status')
+def get_models():
+    resp = make_response("OK", 200)
+    return resp
 
 
 @app.get('/shutdown')
