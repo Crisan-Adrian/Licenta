@@ -1,20 +1,17 @@
 import os
 import signal
-from flask import Flask, make_response
+from threading import Thread
+
+from flask import Flask, request, make_response, json, after_this_request
+from training import train_primitive_model, train_position_model
+from repository import repository
 
 app = Flask(__name__)
-
-# primitiveDict={
-#     '0': 0,
-#     '1': 0.25,
-#     '2': 0.5,
-#     '3': 1,
-#     '4': 1.5,
-#     '5': -0.25,
-#     '6': -0.5,
-#     '7': -1,
-#     '8': -1.5,
-# }
+trainModels = {
+    "primitive": train_primitive_model,
+    "position": train_position_model,
+    "iteration": train_primitive_model
+}
 
 if __name__ == '__main__':
     app.env = 'development'
@@ -23,60 +20,55 @@ if __name__ == '__main__':
 
 @app.get('/models')
 def get_models():
-    resp = make_response('WIP', 200)
+    responseData = repository.get_models()
+    response = json.dumps(responseData)
+    resp = make_response(response, 200)
     return resp
 
 
 @app.get('/models/<string:model>')
-def get_model(model):
-    resp = make_response(f'WIP {model}', 200)
+def get_model():
+    resp = make_response("WIP", 200)
     return resp
 
 
 @app.post('/models')
 def post_model():
-    resp = make_response('WIP', 201)
+    data = json.loads(request.data)
+    modelName = data['modelName']
+    modelType = data['modelType']
+    Thread(target=train_model, args=(modelName, modelType)).start()
+    resp = make_response('Training started', 201)
     return resp
 
 
-@app.delete('/models/<string:model>')
-def delete_model(model):
-    resp = make_response(f'WIP {model}', 200)
-    return resp
+def train_model(modelName, modelType):
+    trainModels[modelType](modelName)
+    repository.add_model(modelName, modelType)
 
 
-@app.get('/datasets')
-def get_datasets():
+@app.delete('/models/')
+def delete_model():
+    data = json.loads(request.data)
+    modelName = data['modelName']
+    modelType = data['modelType']
+    result = repository.delete_model(modelName, modelType)
+    respT = make_response('ModelDeleted', 200)
+    respF = make_response('Model not found', 404)
+    if result:
+        return respT
+    else:
+        return respF
+
+
+@app.get('/requests')
+def get_requests():
     resp = make_response('WIP', 200)
     return resp
 
 
-@app.get('/datasets/<string:dataset>')
-def get_dataset(dataset):
-    resp = make_response(f'WIP {dataset}', 201)
-    return resp
-
-
-@app.post('/datasets')
-def post_dataset():
-    resp = make_response('WIP', 201)
-    return resp
-
-
-@app.delete('/datasets/<int:requestID>')
-def delete_dataset(dataset):
-    resp = make_response(f'WIP {dataset}', 200)
-    return resp
-
-
-@app.get('/cached-requests')
-def get_cached_requests():
-    resp = make_response('WIP', 200)
-    return resp
-
-
-@app.get('/cached-requests/<int:requestID>')
-def get_cached_request(requestID):
+@app.get('/requests/<int:requestID>')
+def get_request(requestID):
     resp = make_response(f'WIP {requestID}', 201)
     return resp
 

@@ -11,6 +11,14 @@ primitiveDict = {
     '7': -1,
     '8': -1.5,
 }
-while True:
-    env = PositionEnvironment(primitiveDict, 11, episodeLength=10)
 
+
+def train_position_model(modelName):
+    print("Running2")
+    x = 0
+    for x in range(0, 100000000):
+        x **= 2
+    print(modelName)
+
+# while True:
+#     env = PositionEnvironment(primitiveDict, 11, episodeLength=10)
