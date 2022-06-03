@@ -135,8 +135,8 @@ def make_prediction(requestName, models):
 
 
 @app.get('/status')
-def get_models():
-    resp = make_response("OK", 200)
+def get_status():
+    resp = make_response('OK', 200)
     return resp
 
 
