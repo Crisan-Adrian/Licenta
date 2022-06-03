@@ -1,11 +1,12 @@
 import json
+import os
 
 
 class Repository:
     def __init__(self):
         self.filePath = "repository/repo.json"
         self.data = None
-        self._readFile()
+        self._initializeFile()
 
     def get_models(self):
         return self.data["models"]
@@ -82,3 +83,22 @@ class Repository:
     def _readFile(self):
         with open(self.filePath) as f:
             self.data = json.load(f)
+
+    def _initializeFile(self):
+        try:
+            f = open(self.filePath, "x")
+            dirs = {"iteration_models": "iteration", "position_models": "position", "primitive_models": "primitive"}
+            models = []
+            fileContent = {"models": models, "requests": []}
+            for directory in dirs:
+                for file in os.listdir(f"trained_models/{directory}"):
+                    if file.endswith(".index"):
+                        modelName = file.split(".")[0]
+                        models.append({"modelName": modelName, "modelType": dirs[directory]})
+            print(json.dumps(fileContent))
+            f.write(json.dumps(fileContent))
+            f.close()
+        except FileExistsError:
+            pass
+        finally:
+            self._readFile()
