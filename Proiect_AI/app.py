@@ -2,7 +2,9 @@ import os
 import signal
 from threading import Thread
 
-from flask import Flask, request, make_response, json, after_this_request
+from flask import Flask, request, make_response, json
+
+import prediction
 from training import train_primitive_model, train_position_model
 from repository import repository
 
@@ -37,8 +39,13 @@ def post_model():
     data = json.loads(request.data)
     modelName = data['modelName']
     modelType = data['modelType']
-    Thread(target=train_model, args=(modelName, modelType)).start()
-    resp = make_response('Training started', 201)
+
+    if not repository.find_model(modelName, modelType):
+        Thread(target=train_model, args=(modelName, modelType)).start()
+        resp = make_response('Training started', 201)
+        return resp
+
+    resp = make_response("A model with this type and name already exists", 500)
     return resp
 
 
@@ -63,20 +70,69 @@ def delete_model():
 
 @app.get('/requests')
 def get_requests():
-    resp = make_response('WIP', 200)
+    responseData = repository.get_requests()
+    response = json.dumps(responseData)
+    resp = make_response(response, 200)
     return resp
 
 
-@app.get('/requests/<int:requestID>')
-def get_request(requestID):
-    resp = make_response(f'WIP {requestID}', 201)
+@app.get('/requests/<string:requestName>')
+def get_request(requestName):
+    resp = make_response(f'WIP {requestName}', 201)
     return resp
 
 
-@app.post('/requests/')
+@app.post('/requests')
 def post_request():
-    resp = make_response('WIP', 101)
+    data = json.loads(request.data)
+    requestName = data['requestName']
+    models = data['models']
+    _request = repository.find_request(requestName)
+    if _request is not None:
+        resp = make_response(f'Request already exists; request status: {_request["requestState"]}', 500)
+        return resp
+
+    isValid = validate_models(models)
+    if not isValid:
+        resp = make_response('Invalid models', 500)
+        return resp
+
+    Thread(target=make_prediction, args=(requestName, models)).start()
+    resp = make_response('Request started', 200)
     return resp
+
+
+def validate_models(models):
+    if len(models) != 3:
+        return False
+    try:
+        primitive_model = [x for x in models if x["modelType"] == "primitive"][0]
+        position_model = [x for x in models if x["modelType"] == "position"][0]
+        iteration_model = [x for x in models if x["modelType"] == "iteration"][0]
+
+        if not repository.find_model(primitive_model["modelName"], primitive_model["modelType"]):
+            return False
+        if not repository.find_model(position_model["modelName"], position_model["modelType"]):
+            return False
+        if not repository.find_model(iteration_model["modelName"], iteration_model["modelType"]):
+            return False
+
+        return True
+    except ValueError:
+        return False
+    except IndexError:
+        return False
+
+
+def make_prediction(requestName, models):
+    primitive_model = [x for x in models if x["modelType"] == "primitive"][0]
+    position_model = [x for x in models if x["modelType"] == "position"][0]
+    iteration_model = [x for x in models if x["modelType"] == "iteration"][0]
+
+    repository.add_request(requestName)
+    prediction.make_prediction(primitive_model, position_model, iteration_model)
+    repository.find_request(requestName)
+
 
 
 @app.get('/shutdown')

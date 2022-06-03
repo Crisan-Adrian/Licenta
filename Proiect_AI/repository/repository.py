@@ -11,9 +11,19 @@ class Repository:
         return self.data["models"]
 
     def add_model(self, modelName, modelType):
-        model = {"modelType": modelType, "modelName": modelName}
-        self.data["models"].append(model)
+        newModel = {"modelType": modelType, "modelName": modelName}
+        for model in self.data["models"]:
+            if model["modelType"] == modelType and model["modelName"] == modelName:
+                return False
+        self.data["models"].append(newModel)
         self._writeFile()
+        return True
+
+    def find_model(self, modelName, modelType):
+        for model in self.data["models"]:
+            if model["modelType"] == modelType and model["modelName"] == modelName:
+                return True
+        return False
 
     def delete_model(self, modelName, modelType):
         model = {"modelType": modelType, "modelName": modelName}
@@ -25,16 +35,43 @@ class Repository:
         return True
 
     def get_requests(self):
-        pass
+        return self.data["requests"]
 
-    def add_request(self):
-        pass
+    def add_request(self, requestName):
+        print(requestName)
+        newRequest = {"requestName": requestName, "requestState": "NOT_FINISHED"}
+        for request in self.data["requests"]:
+            if request["requestName"] == requestName:
+                return False
+        self.data["requests"].append(newRequest)
+        self._writeFile()
+        return True
+
+    def find_request(self, requestName):
+        for request in self.data["requests"]:
+            if request["requestName"] == requestName:
+                return request
+        return None
 
     def finish_request(self, requestName):
-        pass
+        for request in self.data["requests"]:
+            if request["requestName"] == requestName:
+                request["requestState"] = "FINISHED"
+                self._writeFile()
+                return True
+        return False
 
     def deliver_request(self, requestName):
-        pass
+        finishedRequest = None
+        for request in self.data["requests"]:
+            if request["requestName"] == requestName and request["requestState"] == "FINISHED":
+                finishedRequest = request
+                break
+            if request["requestName"] == requestName and request["requestState"] == "NOT_FINISHED":
+                return False
+        self.data["requests"].remove(finishedRequest)
+        self._writeFile()
+        return True
 
     def _writeFile(self):
         json_object = json.dumps(self.data, indent=4)
