@@ -9,7 +9,7 @@ class Repository:
         self._initializeFile()
 
     def get_models(self):
-        return self.data["models"]
+        return {"models": self.data["models"]}
 
     def add_model(self, modelName, modelType):
         newModel = {"modelType": modelType, "modelName": modelName}

@@ -30,6 +30,9 @@ def get_models():
 
 @app.get('/models/<string:model>')
 def get_model():
+    # Get from repository
+    # If model does not exist return 404
+    # If model exists return it
     resp = make_response("WIP", 200)
     return resp
 

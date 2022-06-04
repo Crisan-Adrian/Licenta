@@ -1,5 +1,3 @@
-import threading
-
 from keras.optimizers import Adam
 from matplotlib import pyplot as plt
 from rl.agents import DQNAgent
