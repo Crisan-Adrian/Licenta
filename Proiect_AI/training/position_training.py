@@ -5,9 +5,9 @@ from rl.memory import SequentialMemory
 from rl.policy import GreedyQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy
 
 from environments import PositionEnvironment
-from models import create_position_model
+from models import create_position_model, create_position_model2
 
-EPISODE_LENGTH = 1000
+EPISODE_LENGTH = 100
 EPISODES = 1000
 ANNEAL_PERIOD = 100
 MEMORY = 20000
@@ -61,7 +61,7 @@ def train_position_model(modelName):
             score += reward
         print(f'Episode: {episode}, Score:{score}')
 
-    model = create_position_model(actions)
+    model = create_position_model2(actions)
 
     model.summary()
 
@@ -84,4 +84,4 @@ def train_position_model(modelName):
 
 
 if __name__ == "__main__":
-    train_position_model("position_model_0001")
+    train_position_model("position_model_0002")
