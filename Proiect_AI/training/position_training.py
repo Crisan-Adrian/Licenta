@@ -7,7 +7,7 @@ from rl.policy import GreedyQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy
 from environments import PositionEnvironment
 from models import create_position_model, create_position_model2
 
-EPISODE_LENGTH = 100
+EPISODE_LENGTH = 1000
 EPISODES = 1000
 ANNEAL_PERIOD = 100
 MEMORY = 20000

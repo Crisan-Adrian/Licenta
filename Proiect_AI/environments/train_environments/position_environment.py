@@ -1,3 +1,4 @@
+import random
 from typing import Optional, Union, Tuple
 
 import gym
@@ -16,6 +17,18 @@ def normalizeL(_input):
     normalized = []
     for x in _input:
         normalized.append(normalize(x))
+    return normalized
+
+
+def normalizeNode(_input, maxVal):
+    normalized = _input / maxVal
+    return normalized
+
+
+def normalizeNodeL(_input, maxVal):
+    normalized = []
+    for x in _input:
+        normalized.append(normalizeNode(x, maxVal))
     return normalized
 
 
@@ -121,22 +134,30 @@ class PositionEnvironment(gym.Env):
 
         self.episodeStep += 1
         if not setOptimal:
+            notOptimal = []
+            optimized = False
             for i in range(len(node)):
                 if not self.is_optimal(node[i], current[i], target[i]):
-                    self.set_optimal(i, node, current[i], target[i])
-                else:
-                    self.currentStep += 1
-                    if self.currentStep == self.length:
-                        self.currentStep = 0
-                    current = self.current[self.currentStep]
-                    target = self.target[self.currentStep]
-                    node = self.node[self.currentStep]
+                    optimized = True
+                    notOptimal.append((i, node, current[i], target[i]))
+            if len(notOptimal) != 0:
+                index = random.randint(0, len(notOptimal) - 1)
+                i, _node, _current, _target = notOptimal[index]
+                self.set_optimal(i, _node, _current, _target)
+
+            if not optimized:
+                self.currentStep += 1
+                if self.currentStep == self.length:
+                    self.currentStep = 0
+                current = self.current[self.currentStep]
+                target = self.target[self.currentStep]
+                node = self.node[self.currentStep]
 
         done = self.episodeStep >= self.length
 
         current, target = preprocess(current, target)
 
-        state = current + target + node.tolist()
+        state = current + target + normalizeNodeL(node.tolist(), len(self.primitives))
         state = np.array(state)
 
         info = {}
@@ -156,7 +177,7 @@ class PositionEnvironment(gym.Env):
 
         current, target = preprocess(current, target)
 
-        state = current + target + node.tolist()
+        state = current + target + normalizeNodeL(node.tolist(), len(self.primitives))
         state = np.array(state)
 
         return state
