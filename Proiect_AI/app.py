@@ -29,10 +29,11 @@ def get_models():
 
 
 @app.get('/models/<string:model>')
-def get_model():
+def get_model(mode):
     # Get from repository
     # If model does not exist return 404
     # If model exists return it
+    modelType = request.args.get('modelType')
     resp = make_response("WIP", 200)
     return resp
 
@@ -90,6 +91,7 @@ def post_request():
     data = json.loads(request.data)
     requestName = data['requestName']
     models = data['models']
+    observations = data['observations']
     _request = repository.find_request(requestName)
     if _request is not None:
         resp = make_response(f'Request already exists; request status: {_request["requestState"]}', 500)

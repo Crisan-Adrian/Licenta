@@ -3,9 +3,10 @@ import os
 
 
 class Repository:
-    def __init__(self):
-        self.filePath = "repository/repo.json"
+    def __init__(self, path, models_dir):
+        self.filePath = path
         self.data = None
+        self.models_dir = models_dir
         self._initializeFile()
 
     def get_models(self):
@@ -69,10 +70,12 @@ class Repository:
                 finishedRequest = request
                 break
             if request["requestName"] == requestName and request["requestState"] == "NOT_FINISHED":
-                return False
-        self.data["requests"].remove(finishedRequest)
-        self._writeFile()
-        return True
+                return None
+        if finishedRequest is not None:
+            self.data["requests"].remove(finishedRequest)
+            self._writeFile()
+            return finishedRequest
+        return None
 
     def _writeFile(self):
         json_object = json.dumps(self.data, indent=4)
@@ -90,8 +93,11 @@ class Repository:
             dirs = {"iteration_models": "iteration", "position_models": "position", "primitive_models": "primitive"}
             models = []
             fileContent = {"models": models, "requests": []}
+            script_dir = os.path.dirname(__file__)
+            path = f"..\\{self.models_dir}"
+            dir_path = os.path.join(script_dir, path)
             for directory in dirs:
-                for file in os.listdir(f"trained_models/{directory}"):
+                for file in os.listdir(f"{dir_path}\\{directory}"):
                     if file.endswith(".index"):
                         modelName = file.split(".")[0]
                         models.append({"modelName": modelName, "modelType": dirs[directory]})

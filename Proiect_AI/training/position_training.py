@@ -5,7 +5,7 @@ from rl.memory import SequentialMemory
 from rl.policy import GreedyQPolicy, LinearAnnealedPolicy, EpsGreedyQPolicy
 
 from environments import PositionEnvironment
-from models import create_position_model, create_position_model2
+from models import create_position_model2
 
 EPISODE_LENGTH = 1000
 EPISODES = 1000
@@ -84,4 +84,4 @@ def train_position_model(modelName):
 
 
 if __name__ == "__main__":
-    train_position_model("position_model_0002")
+    train_position_model("position_model_0001")
