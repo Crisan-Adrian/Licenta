@@ -40,10 +40,6 @@ _ReSharper*/
 
 packages/
 
-.pyc
-__pycache__/
-
-__pycache__/
 *.py[cod]
 *$py.class
 
@@ -54,15 +50,6 @@ __pycache__/
 __pycache__/
 
 *.pyc
-/Proiect_AI/environments/__pycache__/__init__.cpython-310.pyc
-/Proiect_AI/environments/__pycache__/__init__.cpython-310.pyc
-/Proiect_AI/environments/__pycache__/primitive_live_environment.cpython-310.pyc
-/Proiect_AI/environments/train_environments/__pycache__/__init__.cpython-310.pyc
-/Proiect_AI/environments/train_environments/__pycache__/iteration_environment.cpython-310.pyc
-/Proiect_AI/environments/train_environments/__pycache__/position_environment.cpython-310.pyc
-/Proiect_AI/environments/train_environments/__pycache__/primitive_environment.cpython-310.pyc
-/Proiect_AI/models/__pycache__/__init__.cpython-310.pyc
-/Proiect_AI/models/__pycache__/primitive_model.cpython-310.pyc
 .Python
 build/
 develop-eggs/
@@ -209,8 +196,5 @@ dmypy.json
 cython_debug/
 /Proiect_AI/repository/repo.txt
 /Proiect_AI/repository/repo.json
-/Proiect_AI/models/__pycache__/position_model.cpython-310.pyc
-/Proiect_AI/models/__pycache__/position_model.cpython-310.pyc
-/Proiect_AI/models/__pycache__/position_model.cpython-310.pyc
 /Proiect_AI/trained_models/position_models/checkpoint
 /Proiect_AI/trained_models/iteration_models/checkpoint
