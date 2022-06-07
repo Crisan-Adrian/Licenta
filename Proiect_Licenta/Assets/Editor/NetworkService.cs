@@ -122,11 +122,6 @@ public class NetworkService
         UnityWebRequest getRequest = UnityWebRequest.Get(url);
 
         getRequest.SendWebRequest();
-
-        if (getRequest.result == UnityWebRequest.Result.ConnectionError)
-        {
-            Debug.Log(getRequest.error);
-        }
     }
 
     public async void PostRequest(RequestDTO requestDTO)
