@@ -30,30 +30,30 @@ primitiveDict = {
 
 
 def train_primitive_model(modelName):
-    print("Running")
-    x = 0
-    for x in range(0, 100000000):
-        x **= 2
-    print(modelName)
-    # actions = len(primitiveDict)
-    # print(actions)
-    #
-    # model = create_primitive_model(actions)
-    #
-    # model.summary()
-    #
-    # trainEnv = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH, repeat=REPEAT)
-    #
-    # dqn = build_agent(model, actions)
-    # dqn.compile(Adam(learning_rate=10e-6))
-    # scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=0)
-    # dqn.save_weights(f'../trained_models/{modelName}', overwrite=True)
-    #
-    # filename = f"../train_rewards/{modelName}.csv"
-    # f = open(filename, mode="w")
-    # for x in scores.history['episode_reward']:
-    #     f.write(str(x) + "\n")
-    # f.close()
+    # print("Running")
+    # x = 0
+    # for x in range(0, 100000000):
+    #     x **= 2
+    # print(modelName)
+    actions = len(primitiveDict)
+    print(actions)
+
+    model = create_primitive_model(actions)
+
+    model.summary()
+
+    trainEnv = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH, repeat=REPEAT)
+
+    dqn = build_agent(model, actions)
+    dqn.compile(Adam(learning_rate=10e-6))
+    scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=0)
+    dqn.save_weights(f'../trained_models/{modelName}', overwrite=True)
+
+    filename = f"../train_rewards/{modelName}.csv"
+    f = open(filename, mode="w")
+    for x in scores.history['episode_reward']:
+        f.write(str(x) + "\n")
+    f.close()
 
 
 def build_agent(model_p, actions_p):
@@ -67,45 +67,46 @@ def build_agent(model_p, actions_p):
     return dqnA
 
 
-# env = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH)
-#
-# actions = len(primitiveDict)
-# states = env.get_shape()
-# print(actions)
-#
-# episodes = 10
-# for episode in range(1, episodes + 1):
-#     state = env.reset()
-#     done = False
-#     score = 0
-#
-#     while not done:
-#         action = env.action_space.sample()
-#         n_state, reward, done, info = env.step(action)
-#         score += reward
-#     print(f'Episode: {episode}, Score:{score}')
-#
-# model = create_primitive_model(actions)
-#
-# model.summary()
-#
-# trainEnv = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH, repeat=REPEAT)
-#
-# lr_schedule = keras.optimizers.schedules.ExponentialDecay(
-#     initial_learning_rate=1e-5,
-#     decay_steps=1000,
-#     decay_rate=0.8)
-# dqn = build_agent(model, actions)
-# dqn.compile(Adam(learning_rate=10e-6))
-# scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=2)
-# dqn.save_weights('../trained_models/model_Small_NN_Exp', overwrite=True)
-#
-# print(scores.history['episode_reward'])
-#
-# filename = "../train_rewards/Small_NN_Exp_rewards.csv"
-# f = open(filename, mode="w")
-# for x in scores.history['episode_reward']:
-#     f.write(str(x) + "\n")
-# f.close()
-# plt.plot(scores.history['episode_reward'])
-# plt.show()
+if __name__ == "__main__":
+    env = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH)
+
+    actions = len(primitiveDict)
+    states = env.get_shape()
+    print(actions)
+
+    episodes = 10
+    for episode in range(1, episodes + 1):
+        state = env.reset()
+        done = False
+        score = 0
+
+        while not done:
+            action = env.action_space.sample()
+            n_state, reward, done, info = env.step(action)
+            score += reward
+        print(f'Episode: {episode}, Score:{score}')
+
+    model = create_primitive_model(actions)
+
+    model.summary()
+
+    trainEnv = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH, repeat=REPEAT)
+
+    lr_schedule = keras.optimizers.schedules.ExponentialDecay(
+        initial_learning_rate=1e-5,
+        decay_steps=1000,
+        decay_rate=0.8)
+    dqn = build_agent(model, actions)
+    dqn.compile(Adam(learning_rate=10e-6))
+    scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=2)
+    dqn.save_weights('../trained_models/model_Small_NN_Exp', overwrite=True)
+
+    print(scores.history['episode_reward'])
+
+    filename = "../train_rewards/Small_NN_Exp_rewards.csv"
+    f = open(filename, mode="w")
+    for x in scores.history['episode_reward']:
+        f.write(str(x) + "\n")
+    f.close()
+    plt.plot(scores.history['episode_reward'])
+    plt.show()

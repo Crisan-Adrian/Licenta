@@ -47,7 +47,7 @@ def train_iteration_model(modelName):
     # print(modelName)
     env = IterationEnvironment(primitiveDict, 8, episodeLength=EPISODE_LENGTH)
 
-    actions = 2
+    actions = 8
     print(actions)
 
     episodes = 10
@@ -68,7 +68,7 @@ def train_iteration_model(modelName):
 
     trainEnv = IterationEnvironment(primitiveDict, N, episodeLength=EPISODE_LENGTH)
 
-    dqn = build_agent(model, actions)
+    dqn = build_agent(model, 2)
     dqn.compile(Adam(learning_rate=10e-5))
     scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * EPISODES + 1, visualize=False, verbose=2)
     dqn.save_weights(f'../trained_models/iteration_models/{modelName}', overwrite=True)
@@ -85,4 +85,4 @@ def train_iteration_model(modelName):
 
 
 if __name__ == "__main__":
-    train_iteration_model("iteration_model_0001")
+    train_iteration_model("iteration_model_0002")

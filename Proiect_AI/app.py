@@ -29,12 +29,17 @@ def get_models():
 
 
 @app.get('/models/<string:model>')
-def get_model(mode):
+def get_model(model):
     # Get from repository
     # If model does not exist return 404
     # If model exists return it
     modelType = request.args.get('modelType')
-    resp = make_response("WIP", 200)
+
+    found = repository.find_model(model, modelType)
+    if found:
+        resp = make_response("WIP", 200)
+    else:
+        resp = make_response("Model not found", 404)
     return resp
 
 
@@ -82,6 +87,7 @@ def get_requests():
 
 @app.get('/requests/<string:requestName>')
 def get_request(requestName):
+    # TODO: implement
     resp = make_response(f'WIP {requestName}', 201)
     return resp
 
@@ -102,7 +108,7 @@ def post_request():
         resp = make_response('Invalid models', 500)
         return resp
 
-    Thread(target=make_prediction, args=(requestName, models)).start()
+    Thread(target=make_prediction, args=(requestName, models, observations)).start()
     resp = make_response('Request started', 200)
     return resp
 
@@ -129,14 +135,17 @@ def validate_models(models):
         return False
 
 
-def make_prediction(requestName, models):
+def make_prediction(requestName, models, observations):
     primitive_model = [x for x in models if x["modelType"] == "primitive"][0]
     position_model = [x for x in models if x["modelType"] == "position"][0]
     iteration_model = [x for x in models if x["modelType"] == "iteration"][0]
 
     repository.add_request(requestName)
-    prediction.make_prediction(primitive_model, position_model, iteration_model)
-    repository.find_request(requestName)
+    data = prediction.convert_data(observations)
+    predictions = prediction.make_prediction(primitive_model, position_model, iteration_model, data)
+    convertedPredictions = prediction.convert_predictions(predictions)
+    prediction.save_prediction(convertedPredictions, requestName)
+    repository.finish_request(requestName)
 
 
 @app.get('/status')

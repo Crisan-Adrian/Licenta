@@ -1,14 +1,13 @@
 import numpy as np
 import pandas as pd
+from keras.optimizers import SGD
 from numpy import exp
 from rl.agents import DQNAgent
 from rl.memory import SequentialMemory
 from rl.policy import GreedyQPolicy
-from keras.optimizers import SGD
 
-from environments import PrimitiveLiveEnvironment
-from models import create_primitive_model3
-
+import prediction
+from models import create_primitive_model
 
 np.set_printoptions(precision=2)
 
@@ -22,8 +21,8 @@ def build_agent(model_p, actions_p):
     return dqnA
 
 
-def normalize(input):
-    normalized = input / 360
+def normalize(_input):
+    normalized = _input / 360
     return normalized
 
 
@@ -41,27 +40,27 @@ primitiveDict = {
 
 actions = len(primitiveDict)
 
-modelV = "trained_models/model_Small_NN_Exp"
+modelV = "../trained_models/primitive_models/model_Very_Small_NN_Exp"
 
 dataSet = pd.read_csv("../datasets/dataSet_0000.csv")
 test = np.array(dataSet)
 n = test.shape[1] // 2
-testEnv = PrimitiveLiveEnvironment(test, primitiveDict)
-states = testEnv.get_shape()
-model = create_primitive_model3(states, actions)
+model = create_primitive_model(actions)
 dqn = build_agent(model, actions)
 dqn.compile(SGD(learning_rate=10e-6))
+dqn.load_weights(modelV)
 
 model.summary()
 
 # scores = dqn.test(testEnv, nb_episodes=1, visualize=False)
 
+results_T = []
 for test_predict_arr in test:
     print(test_predict_arr[:8])
     print(test_predict_arr[8:])
     results = []
     for j in range(n):
-        delta = test_predict_arr[n+j] - test_predict_arr[j]
+        delta = test_predict_arr[n + j] - test_predict_arr[j]
         current = test_predict_arr[j]
         z = exp(abs(delta))
         current = normalize(current)
@@ -90,6 +89,9 @@ for test_predict_arr in test:
 
         # print(result_1, np.argmax(result_1))
         # print(result_2, np.argmax(result_2))
-        results.append(primitiveDict[str(result)])
-    print(results)
-    print()
+        results.append(result)
+    # print(results)
+    results_T.append(results)
+
+conv = prediction.convert_predictions(results_T)
+prediction.save_prediction(conv, "heeheere")
