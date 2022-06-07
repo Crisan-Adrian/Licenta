@@ -34,6 +34,18 @@ public class EditorProxy
         return _state.animation;
     }
 
+    public static void SetImitationFile(string imitationFile)
+    {
+        _state.imitationFile = imitationFile;
+        WriteToFile();
+    }
+
+    public static string GetImitationFile()
+    {
+        ReadFromFile();
+        return _state.imitationFile;
+    }
+
     private static void WriteToFile()
     {
         string serializedState = JsonUtility.ToJson(_state);
@@ -51,4 +63,5 @@ class EditorProxyState
 {
     public string observationsPath = "";
     public Animation animation = null;
+    public string imitationFile = "";
 }

@@ -39,6 +39,7 @@ public class AnimationEditorWindow : EditorWindow
     private GUIStyle _style;
     private bool _serverStatus;
     private string _requestName;
+    private string _imitationFile;
 
     [MenuItem("Window/Animation Editor")]
     public static void ShowWindow()
@@ -425,6 +426,9 @@ public class AnimationEditorWindow : EditorWindow
         {
             GetImitation();
         }
+
+        _imitationFile = EditorGUILayout.TextField("ImitationFile", _imitationFile);
+        EditorProxy.SetImitationFile(_imitationFile);
         GUILayout.EndHorizontal();
     }
 
