@@ -34,10 +34,12 @@ def get_model(model):
     # If model does not exist return 404
     # If model exists return it
     modelType = request.args.get('modelType')
-
+    print(modelType)
     found = repository.find_model(model, modelType)
     if found:
-        resp = make_response("WIP", 200)
+        model = repository.get_model(model, modelType)
+        data = json.dumps(model)
+        resp = make_response(data, 200)
     else:
         resp = make_response("Model not found", 404)
     return resp
@@ -95,6 +97,7 @@ def get_request(requestName):
 
     script_dir = os.path.dirname(__file__)
     if _request["requestState"] == "FINISHED":
+        repository.deliver_request(requestName)
         _request["file"] = f'{script_dir}\\predictions\\{requestName}.json'
     else:
         _request["file"] = ''

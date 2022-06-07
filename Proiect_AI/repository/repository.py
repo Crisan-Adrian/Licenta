@@ -12,6 +12,12 @@ class Repository:
     def get_models(self):
         return {"models": self.data["models"]}
 
+    def get_model(self, modelName, modelType):
+        for model in self.data["models"]:
+            if model["modelType"] == modelType and model["modelName"] == modelName:
+                return model
+        return None
+
     def add_model(self, modelName, modelType):
         newModel = {"modelType": modelType, "modelName": modelName}
         for model in self.data["models"]:
