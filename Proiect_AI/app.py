@@ -87,8 +87,19 @@ def get_requests():
 
 @app.get('/requests/<string:requestName>')
 def get_request(requestName):
-    # TODO: implement
-    resp = make_response(f'WIP {requestName}', 201)
+    _request = repository.find_request(requestName)
+
+    if _request is None:
+        resp = make_response(f'Request {requestName} does not exists', 404)
+        return resp
+
+    script_dir = os.path.dirname(__file__)
+    if _request["requestState"] == "FINISHED":
+        _request["file"] = f'{script_dir}\\predictions\\{requestName}.json'
+    else:
+        _request["file"] = ''
+    response = json.dumps(_request)
+    resp = make_response(response, 200)
     return resp
 
 

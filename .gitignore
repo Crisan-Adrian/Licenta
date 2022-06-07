@@ -198,3 +198,4 @@ cython_debug/
 /Proiect_AI/repository/repo.json
 /Proiect_AI/trained_models/position_models/checkpoint
 /Proiect_AI/trained_models/iteration_models/checkpoint
+/Proiect_AI/predictions/*
