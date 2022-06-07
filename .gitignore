@@ -213,3 +213,4 @@ cython_debug/
 /Proiect_AI/models/__pycache__/position_model.cpython-310.pyc
 /Proiect_AI/models/__pycache__/position_model.cpython-310.pyc
 /Proiect_AI/trained_models/position_models/checkpoint
+/Proiect_AI/trained_models/iteration_models/checkpoint
