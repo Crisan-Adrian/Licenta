@@ -126,4 +126,9 @@ public class NetworkService
             Debug.Log(getRequest.error);
         }
     }
+
+    public void PostRequest(RequestDTO requestDTO)
+    {
+        Debug.Log(requestDTO);
+    }
 }

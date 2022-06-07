@@ -12,19 +12,22 @@ public class StickmanEditorController
 {
     private Dictionary<string, GameObject> _currentModelBodyParts;
     private Dictionary<string, GameObject> _pastModelBodyParts;
+    private bool _modelsSet;
 
     public StickmanEditorController()
     {
         _currentModelBodyParts = new();
         _pastModelBodyParts = new();
+        _modelsSet = false;
     }
 
     public void SetModels(GameObject currentModel, GameObject pastModel)
     {
         SetBodyParts(_currentModelBodyParts, currentModel);
         SetBodyParts(_pastModelBodyParts, pastModel);
+        _modelsSet = true;
     }
-    
+
     private void SetBodyParts(Dictionary<string, GameObject> modelBodyParts, GameObject target)
     {
         modelBodyParts["body_lower"] = GameObjectUtilities.FindChildWithName(target, "Body_Lower");
@@ -42,12 +45,18 @@ public class StickmanEditorController
 
     public void SetPastModelPose(AnimationStep animationStep)
     {
-        SetPose(animationStep, _pastModelBodyParts);
+        if (_modelsSet)
+        {
+            SetPose(animationStep, _pastModelBodyParts);
+        }
     }
 
     public void SetCurrentModelPose(AnimationStep animationStep)
     {
-        SetPose(animationStep, _currentModelBodyParts);
+        if (_modelsSet)
+        {
+            SetPose(animationStep, _currentModelBodyParts);
+        }
     }
 
     private void SetPose(AnimationStep animationStep, Dictionary<string, GameObject> model)

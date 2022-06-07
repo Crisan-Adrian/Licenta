@@ -1,4 +1,8 @@
-﻿$HEADER$namespace $NAMESPACE$
+﻿namespace Utilities
 {
-  public class $CLASS$ {$END$}
+    public class ServerConfig
+    {
+        public int port;
+        public string scriptPath;
+    }
 }

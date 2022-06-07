@@ -12,21 +12,25 @@ public class StickmanObserver : MonoBehaviour
     private StickmanController _controller;
     private List<string> _observationData = new List<string>();
     [SerializeField] private List<string> observationFilter = new List<string>();
-    private string path = "D:\\Data.json";
+    private string _path;
 
     void Start()
     {
         _controller = observationTarget.GetComponent<StickmanController>();
         _controller.AddDelegate(FinishDelegate);
     }
-    
+
+    private void Awake()
+    {
+        _path = EditorProxy.GetObservationsPath();
+    }
+
     public void FinishDelegate()
     {
         List<string> dataToSave = _observationData;
         _observationData = new List<string>();
         
-        int frames = dataToSave.Count;
-        string json = "{\"frameCount\": " + frames + ",\"frames\": [";
+        string json = "{\"frames\": [";
         for (int i = 0; i < dataToSave.Count; i++)
         {
             json += dataToSave[i];
@@ -37,7 +41,7 @@ public class StickmanObserver : MonoBehaviour
         }
 
         json += "]\n}";
-        File.WriteAllText(path, json);
+        File.WriteAllText(_path, json);
         // Debug.Log("Saved json data");
     }
 

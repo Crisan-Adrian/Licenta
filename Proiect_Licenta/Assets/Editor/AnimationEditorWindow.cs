@@ -4,6 +4,8 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using DefaultNamespace;
+using NetworkDTO;
 using Unity.EditorCoroutines.Editor;
 using Utilities;
 
@@ -51,6 +53,7 @@ public class AnimationEditorWindow : EditorWindow
         _style.normal.textColor = Color.yellow;
         _style.fontStyle = FontStyle.Bold;
         _style.fontSize = 40;
+        NetworkService.GetInstance().StartServer();
     }
 
     private void OnEnable()
@@ -198,13 +201,20 @@ public class AnimationEditorWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField(String.Format("Animation Steps:{0}", _stepsCount));
         EditorGUILayout.EndHorizontal();
-        _currentStep = EditorGUILayout.IntField("Current Step:", _currentStep, GUILayout.ExpandWidth(true));
+        int currentStep = EditorGUILayout.IntField("Current Step:", _currentStep, GUILayout.ExpandWidth(true));
+
+        if (currentStep < _animation.animationSteps.Count)
+        {
+            _currentStep = currentStep;
+        }
 
         // Show current step inspector
+        if (_animation.animationSteps.Count != 0)
+        {
+            Editor e = Editor.CreateEditor(_animation.animationSteps[_currentStep]);
+            e.DrawDefaultInspector();
+        }
 
-        Editor e = Editor.CreateEditor(_animation.animationSteps[_currentStep]);
-
-        e.DrawDefaultInspector();
         EditorGUILayout.EndScrollView();
     }
 
@@ -276,7 +286,10 @@ public class AnimationEditorWindow : EditorWindow
         if (_animationModel != model)
         {
             _animationModel = model;
+        }
 
+        if (_animationModel != null)
+        {
             NewModelSetup();
         }
 
@@ -316,9 +329,12 @@ public class AnimationEditorWindow : EditorWindow
         if (_animation != a)
         {
             _animation = a;
-            _animationEditor.SetAnimation(a);
-            _currentStep = 0;
-            _stepsCount = _animation.animationSteps.Count;
+            if (_animation != null)
+            {
+                _animationEditor.SetAnimation(a);
+                _currentStep = 0;
+                _stepsCount = _animation.animationSteps.Count;
+            }
         }
     }
 
@@ -338,6 +354,7 @@ public class AnimationEditorWindow : EditorWindow
         {
             CheckServerStatus();
         }
+
         GUILayout.FlexibleSpace();
         GUILayout.EndVertical();
 
@@ -345,22 +362,89 @@ public class AnimationEditorWindow : EditorWindow
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Kill Server", GUILayout.ExpandWidth(true)))
         {
-            Debug.Log("Kill Server");
-            // KillServer();
+            KillServer();
         }
+
+        GUILayout.FlexibleSpace();
+        GUILayout.EndVertical();
+        GUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Start Server", GUILayout.ExpandWidth(true)))
+        {
+            StartServer();
+        }
+
         GUILayout.FlexibleSpace();
         GUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
 
-        if (GUILayout.Button("AAAAAAAAAAAAAA"))
+        if (GUILayout.Button("New Imitation"))
         {
-            Debug.Log("AAAAAAAAAAA");
+            NewImitation();
         }
+
+        EditorGUILayout.LabelField("Observation Data Path");
+        EditorGUILayout.SelectableLabel(EditorProxy.GetObservationsPath(), EditorStyles.textField,
+            GUILayout.Height(EditorGUIUtility.singleLineHeight));
+
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("New File"))
+        {
+            string savePath = EditorUtility.SaveFilePanel(
+                "Save observation to file",
+                "Assets",
+                "observations" + ".json",
+                "json");
+            if (savePath != "")
+            {
+                EditorProxy.SetObservationsPath(savePath);
+            }
+        }
+
+        if (GUILayout.Button("Change File"))
+        {
+            string savePath = EditorUtility.OpenFilePanel(
+                "Select observations file",
+                "Assets",
+                "json");
+            if (savePath != "")
+            {
+                EditorProxy.SetObservationsPath(savePath);
+            }
+        }
+
+        GUILayout.EndHorizontal();
+
+        EditorProxy.SetAnimation((Animation) EditorGUILayout.ObjectField("Animation:", EditorProxy.GetAnimation(),
+            typeof(Animation), true));
     }
 
-    private void CheckServerStatus()
+    private async void NewImitation()
     {
-        bool isRunning = NetworkService.CheckServerStatus();
+        NetworkService serverManager = NetworkService.GetInstance();
+        ModelList modelList = await serverManager.GetModels();
+
+        RequestDTO requestDTO = ImitationRequestWindow.Open(modelList);
+        requestDTO.observations = EditorProxy.GetObservationsPath();
+        serverManager.PostRequest(requestDTO);
+    }
+
+    private void KillServer()
+    {
+        NetworkService serverManager = NetworkService.GetInstance();
+        serverManager.SendKillRequest();
+    }
+
+    private void StartServer()
+    {
+        NetworkService serverManager = NetworkService.GetInstance();
+        serverManager.StartServer();
+    }
+
+    private async void CheckServerStatus()
+    {
+        NetworkService networkService = NetworkService.GetInstance();
+        bool isRunning = await networkService.CheckServerStatus();
 
         _style.normal.textColor = isRunning ? Color.green : Color.red;
 

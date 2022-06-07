@@ -11,7 +11,7 @@ public class StickmanController : MonoBehaviour
     //TODO clean-up code
     [SerializeField] private bool loop = true;
     [SerializeField] private AnimationStep initialPose;
-    [SerializeField] private Animation animation;
+    [SerializeField] private Animation stickmanAnimation;
     [SerializeField] private float frameModifier = 1f;
     [SerializeField] private float epsilon = .5f;
     [SerializeField] private float overshootEpsilon = .0001f;
@@ -37,8 +37,9 @@ public class StickmanController : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         
+        stickmanAnimation = EditorProxy.GetAnimation();
         Setup();
-        
+
         _frames = 0;
         _reachedEnd = false;
     }
@@ -69,7 +70,6 @@ public class StickmanController : MonoBehaviour
         keys.Add("right_arm_upper");
         keys.Add("right_arm_lower");
         keys.Add("head");
-        Debug.Log("SetKeys");
     }
 
     public void AddDelegate(OnFinishDelegate finishDelegate)
@@ -95,7 +95,6 @@ public class StickmanController : MonoBehaviour
         _bodyParts["right_arm_lower"] = GameObjectUtilities.FindChildWithName(gameObject,"Right_Arm_Lower");
         _bodyParts["right_arm_upper"] = GameObjectUtilities.FindChildWithName(gameObject,"Right_Arm_Upper");
         _bodyParts["head"] = GameObjectUtilities.FindChildWithName(gameObject,"Head");
-        Debug.Log("SetBodyParts");
     }
 
     void FixedUpdate()
@@ -352,7 +351,7 @@ public class StickmanController : MonoBehaviour
     private void UpdateWalkStepComponents()
     {
         _index++;
-        if (_index == GetComponent<Animation>().animationSteps.Count)
+        if (_index == stickmanAnimation.animationSteps.Count)
         {
             if (loop == true)
             {
@@ -370,7 +369,7 @@ public class StickmanController : MonoBehaviour
             _frames = 0;
         }
         
-        AnimationStep animationStep = GetComponent<Animation>().animationSteps[_index];
+        AnimationStep animationStep = stickmanAnimation.animationSteps[_index];
 
         _animationStepComponents["body_lower"] = animationStep.lowerBodyRotation;
         _animationStepComponents["body_upper"] = animationStep.upperBodyRotation;
