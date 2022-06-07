@@ -13,6 +13,7 @@ namespace DefaultNamespace
         private Model _primitiveModel;
         private Model _positionModel;
         private Model _iterationModel;
+        private bool _submitted;
         private ModelList _models;
 
         private List<Model> _primitiveModels;
@@ -33,11 +34,12 @@ namespace DefaultNamespace
             window.SetModels(models);
             window.ShowModal();
 
-            RequestDTO requestModalDTO = new RequestDTO();
-            requestModalDTO.requestName = window._requestName;
-            requestModalDTO.models = new List<Model>() { window._primitiveModel, window._positionModel, window._iterationModel };
+            RequestDTO requestDTO = new RequestDTO();
+            requestDTO.requestName = window._requestName;
+            requestDTO.models = new List<Model>() { window._primitiveModel, window._positionModel, window._iterationModel };
+            requestDTO.submitted = window._submitted;
             
-            return requestModalDTO;
+            return requestDTO;
         }
         
         public void SetModels(ModelList models)
@@ -66,10 +68,18 @@ namespace DefaultNamespace
             _iterationModel = _iterationModels[_iterationIndex];
             
             EditorGUILayout.Space();
+            EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Create Request"))
             {
+                _submitted = true;
                 Close();
             }
+            if (GUILayout.Button("Cancel"))
+            {
+                _submitted = false;
+                Close();
+            }
+            EditorGUILayout.EndHorizontal();
         }
     }
 }

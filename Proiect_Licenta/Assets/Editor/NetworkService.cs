@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using NetworkDTO;
 using UnityEngine.Networking;
 using Unity.EditorCoroutines.Editor;
+using UnityEditor;
 using UnityEngine;
 using Utilities;
 using Debug = UnityEngine.Debug;
@@ -127,8 +129,58 @@ public class NetworkService
         }
     }
 
-    public void PostRequest(RequestDTO requestDTO)
+    public async void PostRequest(RequestDTO requestDTO)
     {
-        Debug.Log(requestDTO);
+        string postData = JsonUtility.ToJson(requestDTO);
+        Debug.Log(postData);
+        UnityWebRequest getRequest = UnityWebRequest.Post(String.Format("{0}/requests", uri), "POST");
+
+        getRequest.SetRequestHeader("Content-Type", "application/json");
+        getRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(postData)) as UploadHandler;
+
+        var operation = getRequest.SendWebRequest();
+
+        while (!operation.isDone)
+        {
+            await Task.Yield();
+        }
+
+        if (getRequest.result == UnityWebRequest.Result.ConnectionError)
+        {
+            
+            Debug.Log(getRequest.error);
+        }
+        else
+        {
+            string response = getRequest.downloadHandler.text;
+            Debug.Log(response);
+        }
+    }
+
+    public async void GetRequest(string requestName)
+    {
+        UnityWebRequest getRequest = UnityWebRequest.Get(String.Format("{0}/request/{1}", uri, requestName));
+
+        getRequest.SetRequestHeader("Content-Type", "application/json");
+
+        var operation = getRequest.SendWebRequest();
+
+        while (!operation.isDone)
+        {
+            await Task.Yield();
+        }
+
+        if (getRequest.result == UnityWebRequest.Result.ConnectionError)
+        {
+            return null;
+        }
+        else
+        {
+            string jsonResponse = getRequest.downloadHandler.text;
+            ModelList modelList = JsonUtility.FromJson<ModelList>(jsonResponse);
+            return modelList;
+        }
+        
+        FileUtil.CopyFileOrDirectory("sourcepath/YourFileOrFolder", "destpath/YourFileOrFolder");
     }
 }

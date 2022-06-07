@@ -8,5 +8,6 @@ namespace NetworkDTO
         public string requestName;
         public List<Model> models;
         public string observations;
+        [System.NonSerialized] public bool submitted;
     }
 }

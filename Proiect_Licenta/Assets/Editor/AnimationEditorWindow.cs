@@ -423,10 +423,13 @@ public class AnimationEditorWindow : EditorWindow
     {
         NetworkService serverManager = NetworkService.GetInstance();
         ModelList modelList = await serverManager.GetModels();
-
+        
         RequestDTO requestDTO = ImitationRequestWindow.Open(modelList);
         requestDTO.observations = EditorProxy.GetObservationsPath();
-        serverManager.PostRequest(requestDTO);
+        if (requestDTO.submitted)
+        {
+            serverManager.PostRequest(requestDTO);
+        }
     }
 
     private void KillServer()
