@@ -1,0 +1,14 @@
+{
+    "predictions": [
+        {
+            "left_leg_upper": 1,
+            "left_leg_lower": 1,
+            "right_leg_upper": 1,
+            "right_leg_lower": 1.5,
+            "left_arm_upper": 0,
+            "left_arm_lower": 1,
+            "right_arm_upper": 0,
+            "right_arm_lower": 1
+        }
+    ]
+}

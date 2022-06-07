@@ -38,6 +38,7 @@ public class AnimationEditorWindow : EditorWindow
 
     private GUIStyle _style;
     private bool _serverStatus;
+    private string _requestName;
 
     [MenuItem("Window/Animation Editor")]
     public static void ShowWindow()
@@ -417,6 +418,20 @@ public class AnimationEditorWindow : EditorWindow
 
         EditorProxy.SetAnimation((Animation) EditorGUILayout.ObjectField("Animation:", EditorProxy.GetAnimation(),
             typeof(Animation), true));
+        
+        GUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField(_requestName);
+        if (GUILayout.Button("Get Imitation"))
+        {
+            GetImitation();
+        }
+        GUILayout.EndHorizontal();
+    }
+
+    private void GetImitation()
+    {
+        NetworkService serverManager = NetworkService.GetInstance();
+        serverManager.GetRequest(_requestName);
     }
 
     private async void NewImitation()
@@ -426,6 +441,7 @@ public class AnimationEditorWindow : EditorWindow
         
         RequestDTO requestDTO = ImitationRequestWindow.Open(modelList);
         requestDTO.observations = EditorProxy.GetObservationsPath();
+        _requestName = requestDTO.requestName;
         if (requestDTO.submitted)
         {
             serverManager.PostRequest(requestDTO);

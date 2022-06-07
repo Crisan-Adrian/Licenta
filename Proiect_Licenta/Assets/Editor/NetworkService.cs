@@ -147,7 +147,6 @@ public class NetworkService
 
         if (getRequest.result == UnityWebRequest.Result.ConnectionError)
         {
-            
             Debug.Log(getRequest.error);
         }
         else
@@ -159,7 +158,7 @@ public class NetworkService
 
     public async void GetRequest(string requestName)
     {
-        UnityWebRequest getRequest = UnityWebRequest.Get(String.Format("{0}/request/{1}", uri, requestName));
+        UnityWebRequest getRequest = UnityWebRequest.Get(String.Format("{0}/requests/{1}", uri, requestName));
 
         getRequest.SetRequestHeader("Content-Type", "application/json");
 
@@ -172,15 +171,18 @@ public class NetworkService
 
         if (getRequest.result == UnityWebRequest.Result.ConnectionError)
         {
-            return null;
+            Debug.Log("Connection Error");
         }
-        else
+        else if (getRequest.responseCode == 200)
         {
             string jsonResponse = getRequest.downloadHandler.text;
-            ModelList modelList = JsonUtility.FromJson<ModelList>(jsonResponse);
-            return modelList;
+            RequestResultDTO requestResult = JsonUtility.FromJson<RequestResultDTO>(jsonResponse);
+            if (requestResult.requestState == "FINISHED")
+            {
+                string filename = String.Format("{0}/Imitation/{1}.json", Application.dataPath, requestName);
+                Debug.Log(filename);
+                FileUtil.CopyFileOrDirectory(requestResult.file, filename);
+            }
         }
-        
-        FileUtil.CopyFileOrDirectory("sourcepath/YourFileOrFolder", "destpath/YourFileOrFolder");
     }
 }
