@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 from numpy import exp
 
@@ -20,40 +22,46 @@ def make_prediction(primitive_model_name, position_model_name, iteration_model_n
         '7': -1,
         '8': -1.5,
     }
+    script_dir = os.path.dirname(__file__)
+
     primitive_model = create_primitive_model(len(primitiveDict))
     position_model = create_position_model2(8)
     iteration_model = create_iterator_model(8)
 
     primitive_agent = build_agent(primitive_model, len(primitiveDict))
     primitive_agent.compile(SGD(learning_rate=10e-6))
-    primitive_agent.load_weights(f'../trained_models/primitive_models/{primitive_model_name}')
+    primitive_agent.load_weights(f'{script_dir}/../trained_models/primitive_models/{primitive_model_name["modelName"]}')
 
     position_agent = build_agent(position_model, 8)
     position_agent.compile(SGD(learning_rate=10e-6))
-    position_agent.load_weights(f'../trained_models/position_models/{position_model_name}')
+    position_agent.load_weights(f'{script_dir}/../trained_models/position_models/{position_model_name["modelName"]}')
 
     iteration_agent = build_agent(iteration_model, 2)
     iteration_agent.compile(SGD(learning_rate=10e-6))
-    iteration_agent.load_weights(f'../trained_models/iteration_models/{iteration_model_name}')
+    iteration_agent.load_weights(f'{script_dir}/../trained_models/iteration_models/{iteration_model_name["modelName"]}')
 
+    print(len(data))
     predictions = []
-    for index in range(len(data)):
-        continueIteration = True
-        current = data[index]
-        target = data[index]
-        node = np.random.randint(0, len(primitiveDict), size=(1, 8))
-        while continueIteration:
-            index = choose_position(position_agent, current, target, node)
+    if len(data) > 1:
+        for index in range(len(data) - 1):
+            continueIteration = True
+            current = data[index]
+            target = data[index + 1]
+            node = np.random.randint(0, len(primitiveDict), size=8)
+            iterations = 0
+            while continueIteration and iterations < 20:
+                index = choose_position(position_agent, current, target, node)
 
-            newPrimitive = choose_primitive(primitive_agent, current[index], target[index])
+                newPrimitive = choose_primitive(primitive_agent, current[index], target[index])
 
-            node[index] = newPrimitive
+                node[index] = newPrimitive
 
-            continueIterationResult = choose_iteration(iteration_agent, current, target, node)
+                continueIterationResult = choose_iteration(iteration_agent, current, target, node)
 
-            continueIteration = (continueIterationResult == 1)
+                continueIteration = (continueIterationResult == 1)
+                iterations += 1
 
-        predictions.append(node)
+            predictions.append(node)
 
     return predictions
 
@@ -135,12 +143,14 @@ def normalize(_input):
 
 
 def normalizeNode(_input, maxVal):
+    print(_input)
     normalized = _input / maxVal
     return normalized
 
 
 def normalizeNodeL(_input, maxVal):
     normalized = []
+    print(_input)
     for x in _input:
         normalized.append(normalizeNode(x, maxVal))
     return normalized
