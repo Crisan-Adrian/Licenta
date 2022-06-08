@@ -45,7 +45,7 @@ def train_primitive_model(modelName):
     trainEnv = PrimitiveEnvironment(primitiveDict, episodeLength=EPISODE_LENGTH, repeat=REPEAT)
 
     dqn = build_agent(model, actions)
-    dqn.compile(Adam(learning_rate=10e-5))
+    dqn.compile(Adam(learning_rate=10e-6))
     scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=0)
     dqn.save_weights(f'../trained_models/primitive_models/{modelName}', overwrite=True)
 
@@ -97,7 +97,7 @@ if __name__ == "__main__":
         decay_steps=1000,
         decay_rate=0.8)
     dqn = build_agent(model, actions)
-    dqn.compile(Adam(learning_rate=10e-6))
+    dqn.compile(Adam(learning_rate=10e-5))
     scores = dqn.fit(trainEnv, nb_steps=EPISODE_LENGTH * REPEAT * EPISODES + 1, visualize=False, verbose=2)
     dqn.save_weights('../trained_models/primitive_models/model_Small_NN_Exp2', overwrite=True)
 

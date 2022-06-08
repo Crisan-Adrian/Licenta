@@ -213,7 +213,6 @@ public class StickmanController : MonoBehaviour
 
     private static Vector3 AdjustRotationVector(Vector3 rotationValues)
     {
-        //TODO: solve knee issue
         Vector3 adjustedRotationVector = Vector3.zero;
         if (rotationValues.x < -0.1)
         {
@@ -259,7 +258,7 @@ public class StickmanController : MonoBehaviour
 
     private Vector3 GetRotationStepTarget(Vector3 targetRotation, Vector3 currentRotation)
     {
-        return new Vector3(
+        return new(
             GetRotationStepTargetAxis(targetRotation.x, currentRotation.x),
             GetRotationStepTargetAxis(targetRotation.y, currentRotation.y),
             GetRotationStepTargetAxis(targetRotation.z, currentRotation.z));

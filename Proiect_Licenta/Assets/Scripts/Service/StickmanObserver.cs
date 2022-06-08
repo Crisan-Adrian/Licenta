@@ -10,8 +10,8 @@ public class StickmanObserver : MonoBehaviour
     //TODO clean-up code
     [SerializeField] private GameObject observationTarget;
     private StickmanController _controller;
-    private List<string> _observationData = new List<string>();
-    [SerializeField] private List<string> observationFilter = new List<string>();
+    private List<string> _observationData = new();
+    [SerializeField] private List<string> observationFilter = new();
     private string _path;
 
     void Start()

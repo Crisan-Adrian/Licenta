@@ -419,17 +419,22 @@ public class AnimationEditorWindow : EditorWindow
 
         EditorProxy.SetAnimation((Animation) EditorGUILayout.ObjectField("Animation:", EditorProxy.GetAnimation(),
             typeof(Animation), true));
-        
-        GUILayout.BeginHorizontal();
+
         EditorGUILayout.LabelField(_requestName);
+        GUILayout.BeginHorizontal();
+
+        string imitationFile = EditorGUILayout.TextField("ImitationFile", _imitationFile);
+        if (imitationFile != _imitationFile)
+        {
+            _imitationFile = imitationFile;
+            EditorProxy.SetImitationFile(_imitationFile);
+        }
+
+        GUILayout.EndHorizontal();
         if (GUILayout.Button("Get Imitation"))
         {
             GetImitation();
         }
-
-        _imitationFile = EditorGUILayout.TextField("ImitationFile", _imitationFile);
-        EditorProxy.SetImitationFile(_imitationFile);
-        GUILayout.EndHorizontal();
     }
 
     private void GetImitation()
@@ -442,7 +447,7 @@ public class AnimationEditorWindow : EditorWindow
     {
         NetworkService serverManager = NetworkService.GetInstance();
         ModelList modelList = await serverManager.GetModels();
-        
+
         RequestDTO requestDTO = ImitationRequestWindow.Open(modelList);
         requestDTO.observations = EditorProxy.GetObservationsPath();
         _requestName = requestDTO.requestName;
