@@ -11,6 +11,7 @@ public class ImitationController : MonoBehaviour
     private int _index;
     private Dictionary<string, GameObject> _bodyParts = new();
     private Dictionary<string, Vector3> _rotations = new();
+    private Dictionary<string, Vector3> _initialRotations = new();
 
     // Start is called before the first frame update
     void Start()
@@ -25,13 +26,21 @@ public class ImitationController : MonoBehaviour
     private void SetRotations()
     {
         _rotations["left_leg_lower"] = _bodyParts["left_leg_lower"].transform.eulerAngles;
+        _initialRotations["left_leg_lower"] = _bodyParts["left_leg_lower"].transform.eulerAngles;
         _rotations["left_leg_upper"] = _bodyParts["left_leg_upper"].transform.eulerAngles;
+        _initialRotations["left_leg_upper"] = _bodyParts["left_leg_upper"].transform.eulerAngles;
         _rotations["right_leg_lower"] = _bodyParts["right_leg_lower"].transform.eulerAngles;
+        _initialRotations["right_leg_lower"] = _bodyParts["right_leg_lower"].transform.eulerAngles;
         _rotations["right_leg_upper"] = _bodyParts["right_leg_upper"].transform.eulerAngles;
+        _initialRotations["right_leg_upper"] = _bodyParts["right_leg_upper"].transform.eulerAngles;
         _rotations["left_arm_lower"] = _bodyParts["left_arm_lower"].transform.eulerAngles;
+        _initialRotations["left_arm_lower"] = _bodyParts["left_arm_lower"].transform.eulerAngles;
         _rotations["left_arm_upper"] = _bodyParts["left_arm_upper"].transform.eulerAngles;
+        _initialRotations["left_arm_upper"] = _bodyParts["left_arm_upper"].transform.eulerAngles;
         _rotations["right_arm_lower"] = _bodyParts["right_arm_lower"].transform.eulerAngles;
+        _initialRotations["right_arm_lower"] = _bodyParts["right_arm_lower"].transform.eulerAngles;
         _rotations["right_arm_upper"] = _bodyParts["right_arm_upper"].transform.eulerAngles;
+        _initialRotations["right_arm_upper"] = _bodyParts["right_arm_upper"].transform.eulerAngles;
     }
 
     // Update is called once per frame
@@ -45,10 +54,38 @@ public class ImitationController : MonoBehaviour
         if (_index >= _frames.predictions.Count)
         {
             _index = 0;
+            ResetRotations();
         }
         ImitationFrame imitationFrame = _frames.predictions[_index];
         ApplyRotations(imitationFrame);
         _index++;
+    }
+
+    private void ResetRotations()
+    {
+        _bodyParts["left_leg_lower"].transform.eulerAngles = _initialRotations["left_leg_lower"];
+        _rotations["left_leg_lower"] = _initialRotations["left_leg_lower"];
+        
+        _bodyParts["left_leg_upper"].transform.eulerAngles = _initialRotations["left_leg_upper"];
+        _rotations["left_leg_upper"] = _initialRotations["left_leg_upper"];
+        
+        _bodyParts["right_leg_lower"].transform.eulerAngles = _initialRotations["right_leg_lower"];
+        _rotations["right_leg_lower"] = _initialRotations["right_leg_lower"];
+        
+        _bodyParts["right_leg_upper"].transform.eulerAngles = _initialRotations["right_leg_upper"];
+        _rotations["right_leg_upper"] = _initialRotations["right_leg_upper"];
+        
+        _bodyParts["left_arm_lower"].transform.eulerAngles = _initialRotations["left_arm_lower"];
+        _rotations["left_arm_lower"] = _initialRotations["left_arm_lower"];
+        
+        _bodyParts["left_arm_upper"].transform.eulerAngles = _initialRotations["left_arm_upper"];
+        _rotations["left_arm_upper"] = _initialRotations["left_arm_upper"];
+        
+        _bodyParts["right_arm_lower"].transform.eulerAngles = _initialRotations["right_arm_lower"];
+        _rotations["right_arm_lower"] = _initialRotations["right_arm_lower"];
+        
+        _bodyParts["right_arm_upper"].transform.eulerAngles = _initialRotations["right_arm_upper"];
+        _rotations["right_arm_upper"] = _initialRotations["right_arm_upper"];
     }
 
     private void ApplyRotations(ImitationFrame imitationFrame)

@@ -99,12 +99,15 @@ public class AnimationEditorWindow : EditorWindow
             Debug.Log(importAnimationButton);
             ImportAnimation();
         }
-
+        
+        
+        EditorGUI.BeginDisabledGroup(_animation == null);
         if (GUILayout.Button(exportAnimationButton))
         {
             Debug.Log(exportAnimationButton);
             ExportAnimation();
         }
+        EditorGUI.EndDisabledGroup();
 
         EditorGUILayout.EndHorizontal();
 
@@ -168,8 +171,6 @@ public class AnimationEditorWindow : EditorWindow
     {
         EditorGUILayout.Separator();
 
-        _scrollPos =
-            EditorGUILayout.BeginScrollView(_scrollPos);
         EditorGUILayout.LabelField("Animation Details");
 
         EditorGUILayout.BeginHorizontal();
@@ -209,6 +210,9 @@ public class AnimationEditorWindow : EditorWindow
         {
             _currentStep = currentStep;
         }
+        
+        _scrollPos =
+            EditorGUILayout.BeginScrollView(_scrollPos);
 
         // Show current step inspector
         if (_animation.animationSteps.Count != 0)
@@ -380,11 +384,6 @@ public class AnimationEditorWindow : EditorWindow
         GUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
 
-        if (GUILayout.Button("New Imitation"))
-        {
-            NewImitation();
-        }
-
         EditorGUILayout.LabelField("Observation Data Path");
         EditorGUILayout.SelectableLabel(EditorProxy.GetObservationsPath(), EditorStyles.textField,
             GUILayout.Height(EditorGUIUtility.singleLineHeight));
@@ -416,6 +415,11 @@ public class AnimationEditorWindow : EditorWindow
         }
 
         GUILayout.EndHorizontal();
+        
+        if (GUILayout.Button("New Imitation"))
+        {
+            NewImitation();
+        }
 
         EditorProxy.SetAnimation((Animation) EditorGUILayout.ObjectField("Animation:", EditorProxy.GetAnimation(),
             typeof(Animation), true));
